@@ -1,168 +1,110 @@
 # Orbitally — Gestor de Productividad
 
-Aplicación web de productividad con temática espacial desarrollada con **Laravel 11**, **Blade**, **HTML** y **Tailwind CSS** (CDN).
+Aplicación web de productividad con temática espacial, construida con Laravel + Blade, Tailwind CSS y MYSQL.
 
 ---
 
-## Requisitos
+## Tecnologías
 
-- PHP 8.2+
-- Composer
-- MySQL 8+
-- Node.js (opcional, solo si quieres compilar assets propios)
+- PHP + Laravel
+- Blade Templates
+- Tailwind CSS
+- MySQL
 
 ---
 
-## Instalación paso a paso
+## Configuración del entorno
 
-### 1. Crear el proyecto base de Laravel
-
-```bash
-composer create-project laravel/laravel orbitally
-cd orbitally
-```
-
-### 2. Copiar los archivos de este repositorio
-
-Copia todos los archivos respetando la estructura de directorios:
-
-```
-app/
-  Http/Controllers/
-    AuthController.php
-    DashboardController.php
-    TaskController.php
-  Models/
-    User.php
-    Categoria.php
-    Tarea.php
-
-bootstrap/
-  app.php
-
-config/
-  auth.php
-
-database/
-  migrations/
-    2024_01_01_000000_create_users_table.php
-    2024_01_01_000001_create_categorias_table.php
-    2024_01_01_000002_create_tareas_table.php
-    2024_01_01_000003_create_etiquetas_table.php
-    2024_01_01_000004_create_sesiones_pomodoro_table.php
-    2024_01_01_000005_create_chat_ia_table.php
-    2024_01_01_000006_create_sessions_table.php
-    2024_01_01_000007_create_cache_table.php
-    2024_01_01_000008_create_jobs_table.php
-  seeders/
-    DatabaseSeeder.php
-
-resources/views/
-  layouts/
-    app.blade.php
-    auth.blade.php
-  auth/
-    login.blade.php
-    register.blade.php
-  dashboard/
-    index.blade.php
-    calendar.blade.php
-  tasks/
-    index.blade.php
-    form.blade.php
-  welcome.blade.php
-
-routes/
-  web.php
-```
-
-### 3. Configurar el entorno
-
-```bash
-cp .env.example .env
-php artisan key:generate
-```
-
-Edita `.env` con tus datos de MySQL:
+Archivo .env del proyecto.
 
 ```env
+APP_NAME=Orbitally
+APP_ENV=local
+APP_KEY=base64:RR040nNpUnTPOM7/VuILAGlsfRn1ODEgzhxWaEXZdl0=
+APP_DEBUG=true
+APP_URL=http://localhost:8000
+
+APP_LOCALE=es
+APP_FALLBACK_LOCALE=es
+APP_FAKER_LOCALE=es_ES
+
+APP_MAINTENANCE_DRIVER=file
+
+BCRYPT_ROUNDS=12
+
+LOG_CHANNEL=stack
+LOG_STACK=single
+LOG_DEPRECATIONS_CHANNEL=null
+LOG_LEVEL=debug
+
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
 DB_DATABASE=orbitally
-DB_USERNAME=tu_usuario
-DB_PASSWORD=tu_contraseña
+DB_USERNAME=root
+DB_PASSWORD=Sandia4you
+
+SESSION_DRIVER=database
+SESSION_LIFETIME=120
+SESSION_ENCRYPT=false
+SESSION_PATH=/
+SESSION_DOMAIN=null
+
+BROADCAST_CONNECTION=log
+FILESYSTEM_DISK=local
+QUEUE_CONNECTION=database
+
+CACHE_STORE=database
+CACHE_PREFIX=
+
+MAIL_MAILER=log
+MAIL_HOST=127.0.0.1
+MAIL_PORT=2525
+MAIL_USERNAME=null
+MAIL_PASSWORD=null
+MAIL_ENCRYPTION=null
+MAIL_FROM_ADDRESS="hola@orbitally.app"
+MAIL_FROM_NAME="${APP_NAME}"
 ```
 
-### 4. Crear la base de datos
+---
 
-En MySQL:
-```sql
-CREATE DATABASE orbitally CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-```
+## Puesta en marcha
 
-### 5. Ejecutar migraciones
-
+Ejecutar migraciones:
 ```bash
 php artisan migrate
 ```
 
-### 6. (Opcional) Cargar datos de prueba
-
+Cargar datos de prueba (usuario: `demo@orbitally.app` / contraseña: `password`):
 ```bash
 php artisan db:seed
 ```
-Esto crea el usuario **demo@orbitally.app** con contraseña **password**.
 
-### 7. Lanzar el servidor
-
+Lanzar el servidor:
 ```bash
 php artisan serve
 ```
 
-Accede a `http://localhost:8000`
+---
+
+## Funcionalidades actuales
+
+- Pantalla de presentación con animación de sistema solar
+- Registro e inicio de sesión con sesiones seguras
+- Categorías creadas automáticamente al registrarse
+- Dashboard con estadísticas y tareas recientes
+- Gestion completa de tareas (crear, editar, eliminar)
+- Filtrado de tareas por estado
+- Calendario mensual con tareas por día
+- Datos aislados por usuario
 
 ---
 
-## Estructura de la aplicación
+## Proximas funcionalidades
 
-| Ruta | Descripción |
-|------|-------------|
-| `/` | Pantalla de presentación |
-| `/login` | Inicio de sesión |
-| `/register` | Registro de usuario |
-| `/dashboard` | Panel principal |
-| `/calendario` | Calendario mensual |
-| `/tasks` | Lista de tareas |
-| `/tasks/create` | Nueva tarea |
-| `/tasks/{id}/edit` | Editar tarea |
-
----
-
-## Tecnologías utilizadas
-
-- **Backend:** PHP 8.2 + Laravel 11, patrón MVC
-- **Frontend:** Blade templates, HTML5, CSS3, Tailwind CSS (CDN)
-- **Base de datos:** MySQL con Eloquent ORM
-- **Autenticación:** Sistema propio con `Auth` facade de Laravel (bcrypt)
-- **Fuentes:** Google Fonts (Cinzel + Jost)
-
----
-
-## Funcionalidades implementadas (v1)
-
-- [x] Pantalla de presentación con animación sistema solar
-- [x] Registro e inicio de sesión (bcrypt, sesiones seguras)
-- [x] Creación automática de 4 categorías por defecto al registrarse
-- [x] Dashboard con estadísticas, tareas recientes y mini calendario
-- [x] Gestión completa de tareas (CRUD)
-- [x] Filtrado de tareas por estado
-- [x] Toggle de completar/descompletar tarea
-- [x] Calendario mensual con tareas marcadas por día
-- [x] Protección de rutas (middleware `auth`)
-- [x] Aislamiento de datos por usuario
-
-## Próximas funcionalidades
-
-- [ ] Temporizador Pomodoro
-- [ ] Asistente IA (API Groq)
-- [ ] Módulo de escritura (desktop)
-- [ ] Etiquetas y filtrado transversal
-- [ ] Notificaciones por email
+- Temporizador Pomodoro
+- Asistente IA
+- Modulo de escritura
+- Etiquetas y filtrado avanzado
+- Notificaciones por email
