@@ -367,6 +367,7 @@
             <span class="btn-enter-arrow">→</span>
         </a>
     </div>
+    <!-- Script para animación pequeña de botón -> (m3.material.io) -->
     <script>
         document.querySelector('.btn-enter').addEventListener('click', function(e) {
             const ripple = document.createElement('span');
