@@ -12,7 +12,7 @@
     <style>
         :root {
             --space-deep: #03060f;
-            --accent-gold: #c9a84c;
+            --accent-gold: #eab31c;
             --star-white: #e8edf8;
             --text-dim: rgba(180, 200, 240, 0.55);
             --border-subtle: rgba(255,255,255,0.07);
@@ -53,13 +53,13 @@
             border-radius: 4px;
             width: 100%;
             max-width: 400px;
-            padding: 2.5rem;
+            padding: 40px;
             backdrop-filter: blur(12px);
         }
 
         .auth-logo {
             font-family: 'Cinzel', serif;
-            font-size: 1.6rem;
+            font-size: 28px;
             font-weight: 600;
             letter-spacing: 0.12em;
             background: linear-gradient(135deg, #e8d5a0, var(--accent-gold));
@@ -67,35 +67,35 @@
             -webkit-text-fill-color: transparent;
             background-clip: text;
             text-align: center;
-            margin-bottom: 0.25rem;
+            margin-bottom: 4px;
         }
 
         .auth-subtitle {
             text-align: center;
-            font-size: 0.72rem;
+            font-size: 11.52px;
             font-weight: 300;
             letter-spacing: 0.3em;
             text-transform: uppercase;
-            color: var(--text-dim);
-            margin-bottom: 2rem;
+            color: var(--color-slate-400);
+            margin-bottom: 32px;
         }
 
         .auth-separator {
             height: 1px;
             background: linear-gradient(90deg, transparent, rgba(201,168,76,0.3), transparent);
-            margin-bottom: 2rem;
+            margin-bottom: 32px;
         }
 
-        .form-group { margin-bottom: 1.25rem; }
+        .form-group { margin-bottom: 20px; }
 
         .form-label {
             display: block;
-            font-size: 0.72rem;
+            font-size: 11.50px;
             font-weight: 500;
             letter-spacing: 0.1em;
             text-transform: uppercase;
-            color: var(--text-dim);
-            margin-bottom: 0.4rem;
+            color: var(--color-slate-400);
+            margin-bottom: 6.4px;
         }
 
         .form-input {
@@ -103,9 +103,9 @@
             background: rgba(255,255,255,0.04);
             border: 1px solid rgba(255,255,255,0.08);
             border-radius: 2px;
-            padding: 0.65rem 0.9rem;
+            padding: 10.5px 14.5px;
             font-family: 'Jost', sans-serif;
-            font-size: 0.85rem;
+            font-size: 13.6px;
             color: var(--star-white);
             outline: none;
             transition: border-color 0.2s;
@@ -114,16 +114,16 @@
         .form-input:focus { border-color: rgba(201,168,76,0.45); }
 
         .form-error {
-            font-size: 0.72rem;
+            font-size: 12px;
             color: #ff8866;
-            margin-top: 0.3rem;
+            margin-top: 5px;
         }
 
         .btn-submit {
             width: 100%;
-            padding: 0.75rem;
+            padding: 12px;
             font-family: 'Cinzel', serif;
-            font-size: 0.8rem;
+            font-size: 12.8px;
             font-weight: 600;
             letter-spacing: 0.18em;
             text-transform: uppercase;
@@ -133,14 +133,14 @@
             border-radius: 2px;
             cursor: pointer;
             transition: opacity 0.2s, transform 0.2s;
-            margin-top: 0.5rem;
+            margin-top: 8px;
         }
         .btn-submit:hover { opacity: 0.9; transform: translateY(-1px); }
 
         .auth-footer {
             text-align: center;
-            margin-top: 1.5rem;
-            font-size: 0.78rem;
+            margin-top: 24px;
+            font-size: 12.48px;
             color: var(--text-dim);
         }
         .auth-footer a {
@@ -151,30 +151,33 @@
         .auth-footer a:hover { opacity: 0.8; }
 
         .alert-error {
-            padding: 0.7rem 1rem;
+            padding: 11.2px 16px;
             background: rgba(255,100,80,0.1);
             border: 1px solid rgba(255,100,80,0.25);
             border-radius: 2px;
-            font-size: 0.8rem;
+            font-size: 12.8px;
             color: #ff8866;
-            margin-bottom: 1.25rem;
+            margin-bottom: 20px;
         }
 
         .back-link {
             position: fixed;
-            top: 1.5rem;
-            left: 1.5rem;
-            font-size: 0.75rem;
-            color: var(--text-dim);
+            top: 24px;
+            left: 24px;
+            font-size: 12px;
+            color: var(--star-white);
             text-decoration: none;
             display: flex;
             align-items: center;
-            gap: 0.4rem;
+            gap: 6.4px;
             letter-spacing: 0.05em;
             transition: color 0.2s;
             z-index: 10;
         }
-        .back-link:hover { color: var(--star-white); }
+        .back-link:hover { 
+            color: #b3b3b3;
+            opacity: 0.75;
+        }
     </style>
 </head>
 <body>

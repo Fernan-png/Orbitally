@@ -2,7 +2,7 @@
 @section('title', 'Iniciar Sesión')
 
 @section('content')
-    <div class="auth-logo">Orbitally</div>
+    <div class="auth-logo">orbitally</div>
     <div class="auth-subtitle">Iniciar sesión</div>
     <div class="auth-separator"></div>
 

@@ -108,9 +108,9 @@
             animation: orbit-spin linear infinite;
         }
 
-        .orbit-1 { width: 180px; height: 180px; animation-duration: 8s; }
-        .orbit-2 { width: 300px; height: 300px; animation-duration: 16s; }
-        .orbit-3 { width: 440px; height: 440px; animation-duration: 28s; }
+        .orbit-1 { width: 220px; height: 220px; animation-duration: 8s; }
+        .orbit-2 { width: 380px; height: 380px; animation-duration: 16s; }
+        .orbit-3 { width: 550px; height: 550px; animation-duration: 28s; }
 
         @keyframes orbit-spin { 
             from { 
@@ -121,6 +121,44 @@
                 transform: translate(-50%, -50%) 
                 rotate(360deg); 
             } 
+        }
+        
+        /* Tamaños para móviles (pantallas de menos de 768px) */
+        @media (max-width: 767px) {
+            .orbit-1 { 
+                width: 140px; 
+                height: 140px; 
+            }
+            .orbit-2 { 
+                width: 220px; 
+                height: 220px; 
+            }
+            .orbit-3 { 
+                width: 310px; 
+                height: 310px; 
+            }
+            
+            /* Opcional: Reducir un poco el sol en móviles para que no se vea gigante */
+            .sun {
+                width: 50px;
+                height: 50px;
+                left: -25px;
+                top: -25px;
+            }
+        }
+
+        /* Tamaños para tablets y escritorio (pantallas de 768px en adelante) */
+        @media (min-width: 768px) {
+            .orbit-1 { width: 300px; height: 300px; }
+            .orbit-2 { width: 500px; height: 500px; }
+            .orbit-3 { width: 750px; height: 750px; }
+        }
+
+        /* Si quieres que en monitores muy grandes sea aún más espectacular: */
+        @media (min-width: 1440px) {
+            .orbit-1 { width: 400px; height: 400px; }
+            .orbit-2 { width: 700px; height: 700px; }
+            .orbit-3 { width: 1000px; height: 1000px; }
         }
 
         /* Planetas */
