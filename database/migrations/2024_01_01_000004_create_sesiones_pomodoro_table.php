@@ -13,6 +13,8 @@ return new class extends Migration
             $table->integer('duracion_estudio')->default(25);
             $table->integer('duracion_descanso')->default(5);
             $table->dateTime('inicio')->nullable();
+            $table->dateTime('fin')->nullable();
+            $table->integer('duracion_real')->nullable();
             $table->enum('estado', ['activa', 'completada', 'cancelada'])->default('activa');
             $table->foreignId('tarea_id')->nullable()->constrained('tareas')->onDelete('set null');
             $table->foreignId('usuario_id')->constrained('users')->onDelete('cascade');
