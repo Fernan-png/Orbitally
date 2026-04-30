@@ -12,7 +12,6 @@ class Tarea extends Model
         'titulo',
         'descripcion',
         'emoji',
-        'color',
         'negrita',
         'cursiva',
         'fecha_inicio',

@@ -4,11 +4,12 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\TaskController;
+use App\Http\Controllers\CategoryController;
 
-// ── Public ─────────────────────────────────────
+// --- Public -------------------------------------
 Route::get('/', fn() => view('welcome'))->name('welcome');
 
-// ── Auth ───────────────────────────────────────
+// --- Auth ---------------------------------------
 Route::middleware('guest')->group(function () {
     Route::get('/login',    [AuthController::class, 'showLogin'])->name('login');
     Route::post('/login',   [AuthController::class, 'login']);
@@ -20,7 +21,11 @@ Route::post('/logout', [AuthController::class, 'logout'])
     ->middleware('auth')
     ->name('logout');
 
-// ── Protected ──────────────────────────────────
+Route::get('/categorias',              [CategoryController::class, 'index'])->name('categorias.index');
+Route::post('/categorias',             [CategoryController::class, 'store'])->name('categorias.store');
+Route::delete('/categorias/{categoria}', [CategoryController::class, 'destroy'])->name('categorias.destroy');
+
+// --- Protected -----------------------------------
 Route::middleware('auth')->group(function () {
 
     // Dashboard
@@ -30,4 +35,6 @@ Route::middleware('auth')->group(function () {
     // Tasks (resourceful)
     Route::resource('tasks', TaskController::class)->except(['show']);
     Route::patch('/tasks/{task}/toggle', [TaskController::class, 'toggle'])->name('tasks.toggle');
+
+    Route::resource('categories', CategoryController::class)->only(['index', 'store', 'destroy']);
 });

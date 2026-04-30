@@ -14,7 +14,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
     <style>
-        /* ─── Variables ─────────────────────────────────────────── */
+        /* --- Variables --------------------------------------------------- */
         :root {
             --space-deep:    #03060f;
             --space-mid:     #080f20;
@@ -28,7 +28,7 @@
 
         * { box-sizing: border-box; }
 
-        /* ─── Base ──────────────────────────────────────────────── */
+        /* --- Base --------------------------------------------------- */
         body {
             background:  var(--space-deep);
             font-family: 'Jost', sans-serif;
@@ -61,7 +61,7 @@
                 radial-gradient(1px   1px   at 18% 48%, #ffffff33 0%, transparent 100%);
         }
 
-        /* ─── Sidebar ───────────────────────────────────────────── */
+        /* --- Sidebar --------------------------------------------------- */
         .sidebar {
             position:        fixed;
             left: 0; top: 0; bottom: 0;
@@ -99,7 +99,7 @@
             margin-top:               2px;
         }
 
-        /* ─── Nav ───────────────────────────────────────────────── */
+        /* --- Nav ------------------------------------------------------ */
         nav.sidebar-nav {
             flex:    1;
             padding: 24px 0;
@@ -139,7 +139,7 @@
             border-left-color: var(--accent-gold);
         }
 
-        /* ─── Sidebar user ──────────────────────────────────────── */
+        /* --- Sidebar user ------------------------------------------------------ */
         .sidebar-user {
             padding:    16px 24px;
             border-top: 1px solid var(--border-subtle);
@@ -176,7 +176,7 @@
         }
         .btn-logout:hover { color: #ff7755; }
 
-        /* ─── Main content ──────────────────────────────────────── */
+        /* --- Main content------------------------------------------------------ */
         .main-content {
             margin-left: 220px;
             min-height:  100vh;
@@ -185,7 +185,7 @@
             z-index:     1;
         }
 
-        /* ─── Panel ─────────────────────────────────────────────── */
+        /* --- Panel ------------------------------------------------------ */
         .panel {
             background:      var(--panel-bg);
             border:          1px solid var(--border-subtle);
@@ -193,7 +193,7 @@
             backdrop-filter: blur(8px);
         }
 
-        /* ─── Tabs ──────────────────────────────────────────────── */
+        /* --- Tabs ------------------------------------------------------ */
         .tabs-bar {
             display:       flex;
             border-bottom: 1px solid var(--border-subtle);
@@ -223,7 +223,7 @@
             border-bottom-color: var(--accent-gold);
         }
 
-        /* ─── Page header ───────────────────────────────────────── */
+        /* --- Page header ------------------------------------------------------ */
         .page-header { margin-bottom: 32px; }
 
         .page-title {
@@ -240,7 +240,7 @@
             margin-top: 4px;
         }
 
-        /* ─── Buttons ───────────────────────────────────────────── */
+        /* --- Buttons --------------------------------------------------- */
         .btn-primary {
             display:         inline-flex;
             align-items:     center;
@@ -282,7 +282,7 @@
             color:      var(--star-white);
         }
 
-        /* ─── Form inputs ───────────────────────────────────────── */
+        /* --- Form inputs -------------------------------------------------- */
         .form-input {
             width:         100%;
             background:    rgba(255, 255, 255, 0.05);
@@ -308,7 +308,7 @@
             text-transform: uppercase;
         }
 
-        /* ─── Alerts ────────────────────────────────────────────── */
+        /* --- Alerts ------------------------------------------------------ */
         .alert-success {
             padding:       12px 16px;
             background:    rgba(77, 207, 207, 0.1);
@@ -329,26 +329,7 @@
             margin-bottom: 24px;
         }
 
-        /* ─── Badges ────────────────────────────────────────────── */
-        .badge {
-            display:        inline-flex;
-            align-items:    center;
-            padding:        3.2px 9.6px;
-            border-radius:  2px;
-            font-size:      10.88px;
-            font-weight:    500;
-            letter-spacing: 0.96px;
-            text-transform: uppercase;
-        }
-
-        .badge-alta        { background: rgba(255, 100,  80, 0.15); color: #ff8866;            border: 1px solid rgba(255, 100,  80, 0.25); }
-        .badge-media       { background: rgba(255, 180,  50, 0.15); color: #ffcc55;            border: 1px solid rgba(255, 180,  50, 0.25); }
-        .badge-baja        { background: rgba( 77, 207, 207, 0.12); color: var(--accent-teal); border: 1px solid rgba( 77, 207, 207, 0.25); }
-        .badge-pendiente   { background: rgba(255, 180,  50, 0.10); color: #ffcc55;            border: 1px solid rgba(255, 180,  50, 0.20); }
-        .badge-en_progreso { background: rgba(100, 150, 255, 0.12); color: #88aaff;            border: 1px solid rgba(100, 150, 255, 0.25); }
-        .badge-completada  { background: rgba( 77, 207, 207, 0.10); color: var(--accent-teal); border: 1px solid rgba( 77, 207, 207, 0.20); }
-
-        /* ─── Modal ─────────────────────────────────────────────── */
+        /* --- Modal ------------------------------------------------------ */
         .modal-overlay {
             position:        fixed;
             inset:           0;
@@ -384,9 +365,9 @@
 </head>
 <body>
 
-    {{-- ────────────────────────────────────────────────────────────
+    {{-- -----------------------------------------------------------
          Sidebar
-    ──────────────────────────────────────────────────────────────── --}}
+    ------------------------------------------------------------ --}}
     <aside class="sidebar">
 
         {{-- Logo --}}
@@ -416,10 +397,15 @@
                 Calendario
             </a>
 
+            <a href="{{ route('categorias.index') }}" class="nav-link {{ request()->routeIs('categorias.*') ? 'active' : '' }}">
+                <i class="fa-regular fa-tag"></i>
+                Categorías
+            </a>
+
             <a href="#" class="nav-link">
                 <i class="fa-regular fa-lock"></i>
                 Pomodoro
-                <span class="ml-auto" style="font-size: 9.6px; color: rgba(201,168,76,0.5)">pronto</span>
+                <span class="ml-auto" style="font-size: 10px; color: rgba(201,168,76,0.5)">pronto</span>
             </a>
 
         </nav>
@@ -440,9 +426,9 @@
 
     </aside>
 
-    {{-- ────────────────────────────────────────────────────────────
+    {{-- -----------------------------------------------------------
          Contenido principal
-    ──────────────────────────────────────────────────────────────── --}}
+    ------------------------------------------------------------ --}}
     <main class="main-content">
 
         @if(session('success'))

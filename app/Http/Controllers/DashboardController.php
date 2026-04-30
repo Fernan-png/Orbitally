@@ -64,17 +64,16 @@ class DashboardController extends Controller
             fn($t) => Carbon::parse($t->fecha_fin)->format('Y-m-d')
         );
 
-        return view('dashboard.calendar', compact(
-            'currentDate',
-            'firstDayOfWeek',
-            'daysInMonth',
-            'monthTasks',
-            'tasksByDate',
-        ) + [
-            'prevMonth' => $prevDate->month,
-            'prevYear'  => $prevDate->year,
-            'nextMonth' => $nextDate->month,
-            'nextYear'  => $nextDate->year,
-        ]);
+        $prevMonth = $prevDate->month;
+        $prevYear  = $prevDate->year;
+        $nextMonth = $nextDate->month;
+        $nextYear  = $nextDate->year;
+
+        return view('dashboard.calendar', 
+            compact('currentDate', 'firstDayOfWeek', 'daysInMonth',
+                    'monthTasks', 'tasksByDate', 'prevMonth', 
+                    'prevYear', 'nextMonth', 'nextYear'
+            )
+        );
     }
 }

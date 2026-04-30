@@ -18,6 +18,26 @@
     <a href="{{ route('tasks.index', ['estado' => 'completada']) }}" class="tab-btn {{ request('estado') === 'completada' ? 'active' : '' }}">Completadas</a>
 </div>
 
+@if($categorias->isNotEmpty())
+    <div style="display:flex; gap:0.5rem; flex-wrap:wrap; margin-bottom:1.5rem; align-items:center;">
+        <span style="font-size:0.7rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--text-dim); margin-right:0.25rem;">Categoría:</span>
+        <a href="{{ route('tasks.index', array_merge(request()->except('categoria_id'), [])) }}"
+           style="padding:0.3rem 0.8rem; border-radius:2px; font-size:0.75rem; text-decoration:none; border:1px solid var(--border-subtle);
+                  {{ !request('categoria_id') ? 'color:#03060f; background:var(--accent-gold); border-color:var(--accent-gold);' : 'color:var(--text-dim); background:transparent;' }}">
+            Todas
+        </a>
+        @foreach($categorias as $cat)
+            <a href="{{ route('tasks.index', array_merge(request()->query(), ['categoria_id' => $cat->id])) }}"
+               style="padding:0.3rem 0.8rem; border-radius:2px; font-size:0.75rem; text-decoration:none;
+                      border:1px solid {{ request('categoria_id') == $cat->id ? $cat->color_borde : 'var(--border-subtle)' }};
+                      color:{{ request('categoria_id') == $cat->id ? $cat->color_borde : 'var(--text-dim)' }};
+                      background:{{ request('categoria_id') == $cat->id ? $cat->color_borde . '18' : 'transparent' }};">
+                {{ $cat->nombre }}
+            </a>
+        @endforeach
+    </div>
+@endif
+
 <!-- Tasks list -->
 <div class="panel">
     @if($tasks->isEmpty())
@@ -69,12 +89,6 @@
                         <span style="color:rgba(180,200,240,0.35);">{{ Str::limit($task->descripcion, 40) }}</span>
                     @endif
                 </div>
-            </div>
-
-            <!-- Badges -->
-            <div style="display:flex; gap:0.5rem; align-items:center; flex-shrink:0;">
-                <span class="badge badge-{{ $task->prioridad }}">{{ $task->prioridad }}</span>
-                <span class="badge badge-{{ $task->estado }}">{{ str_replace('_', ' ', $task->estado) }}</span>
             </div>
 
             <!-- Actions -->

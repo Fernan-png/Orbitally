@@ -19,7 +19,7 @@
         ['Completadas', $stats['completadas'], '#4dcfcf']
     ] as [$label, $count, $color])
         <div class="panel" style="padding:1.25rem 1.5rem;">
-            <div style="font-size:0.7rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--text-dim); margin-bottom:0.5rem;">{{ $label }}</div>
+            <div style="font-size:0.75rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--text-dim); margin-bottom:0.5rem;">{{ $label }}</div>
             <div style="font-size:2rem; font-family:'Cinzel',serif; font-weight:600; color:{{ $color }};">{{ $count }}</div>
         </div>
     @endforeach
@@ -31,7 +31,7 @@
     <div class="panel">
         <div style="padding:1.25rem 1.5rem; border-bottom:1px solid var(--border-subtle); display:flex; justify-content:space-between; align-items:center;">
             <span style="font-size:0.8rem; font-weight:500; letter-spacing:0.06em;">Tareas recientes</span>
-            <a href="{{ route('tasks.index') }}" style="font-size:0.72rem; color:var(--accent-gold); text-decoration:none;">Ver todas →</a>
+            <a href="{{ route('tasks.index') }}" style="font-size:0.75rem; color:var(--accent-gold); text-decoration:none;">Ver todas →</a>
         </div>
 
         @forelse($recentTasks as $task)
@@ -53,8 +53,7 @@
                     </div>
                 </div>
                 
-                <span class="badge badge-{{ $task->prioridad }}">{{ $task->prioridad }}</span>
-                <a href="{{ route('tasks.edit', $task->id) }}" style="font-size:0.72rem; color:var(--text-dim); text-decoration:none; flex-shrink:0;">editar</a>
+                <a href="{{ route('tasks.edit', $task->id) }}" style="font-size:0.75rem; color:var(--text-dim); text-decoration:none; flex-shrink:0;">editar</a>
             </div>
         @empty
             <div style="padding:2rem 1.5rem; text-align:center; color:var(--text-dim); font-size:0.82rem;">
@@ -68,7 +67,7 @@
     <aside class="panel" style="padding:1.25rem 1.5rem;">
         <div style="font-size:0.8rem; font-weight:500; letter-spacing:0.06em; margin-bottom:1.25rem; display:flex; justify-content:space-between; align-items:center;">
             <span>Calendario</span>
-            <a href="{{ route('calendar') }}" style="font-size:0.72rem; color:var(--accent-gold); text-decoration:none;">Ver mes →</a>
+            <a href="{{ route('calendar') }}" style="font-size:0.75rem; color:var(--accent-gold); text-decoration:none;">Ver mes →</a>
         </div>
 
         @php
@@ -113,7 +112,7 @@
             <div style="margin-top:1.25rem; padding-top:1.25rem; border-top:1px solid var(--border-subtle);">
                 <div style="font-size:0.7rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--text-dim); margin-bottom:0.75rem;">Próximas</div>
                 @foreach($upcomingTasks->take(3) as $task)
-                    <div style="display:flex; align-items:center; gap:0.6rem; margin-bottom:0.6rem;">
+                    <div style="display:flex; align-items:center; gap:0.5rem; margin-bottom:0.6rem;">
                         <div style="width:3px; height:28px; border-radius:2px; flex-shrink:0;
                                     background:{{ $task->prioridad === 'alta' ? '#ff8866' : ($task->prioridad === 'media' ? '#ffcc55' : '#4dcfcf') }};"></div>
                         <div>

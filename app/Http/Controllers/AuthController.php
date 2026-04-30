@@ -11,7 +11,7 @@ use Illuminate\Validation\Rules\Password;
 
 class AuthController extends Controller
 {
-    // ── LOGIN ─────────────────────────────────────────────
+    // --- LOGIN ----------------------------------------------------------
     public function showLogin()
     {
         return view('auth.login');
@@ -34,7 +34,7 @@ class AuthController extends Controller
         ])->onlyInput('email');
     }
 
-    // ── REGISTER ──────────────────────────────────────────
+    // --- REGISTER -------------------------------------------------------
     public function showRegister()
     {
         return view('auth.register');
@@ -54,7 +54,7 @@ class AuthController extends Controller
             'password' => Hash::make($data['password']),
         ]);
 
-        // Create default categories for new user
+        // Crear las categorías predeterminadas para un nuevo usuario
         $defaultCats = [
             ['nombre' => 'Laboral',  'prioridad' => 1, 'color_borde' => '#4dcfcf'],
             ['nombre' => 'Personal', 'prioridad' => 2, 'color_borde' => '#c9a84c'],
@@ -72,7 +72,7 @@ class AuthController extends Controller
         return redirect()->route('dashboard')->with('success', '¡Bienvenido a Orbitally, ' . $user->nombre . '!');
     }
 
-    // ── LOGOUT ────────────────────────────────────────────
+    // --- LOGOUT ---------------------------------------------------------
     public function logout(Request $request)
     {
         Auth::logout();

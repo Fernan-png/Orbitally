@@ -107,7 +107,6 @@
                             {{ \Carbon\Carbon::parse($task->fecha_fin)->isoFormat('D MMM') }}
                         </div>
                     </div>
-                    <span class="badge badge-{{ $task->estado }}" style="font-size:0.6rem;">{{ str_replace('_',' ',$task->estado) }}</span>
                 </a>
             @empty
                 <div style="font-size:0.8rem; color:var(--text-dim); text-align:center; padding:1rem 0;">Sin tareas este mes</div>

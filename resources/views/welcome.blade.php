@@ -138,7 +138,7 @@
                 height: 310px; 
             }
             
-            /* Opcional: Reducir un poco el sol en móviles para que no se vea gigante */
+            /* Reducir un poco el sol en móviles para que no se vea gigante */
             .sun {
                 width: 50px;
                 height: 50px;
@@ -154,7 +154,6 @@
             .orbit-3 { width: 750px; height: 750px; }
         }
 
-        /* Si quieres que en monitores muy grandes sea aún más espectacular: */
         @media (min-width: 1440px) {
             .orbit-1 { width: 400px; height: 400px; }
             .orbit-2 { width: 700px; height: 700px; }

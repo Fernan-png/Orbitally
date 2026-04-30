@@ -22,8 +22,13 @@ class TaskController extends Controller
             $query->where('estado', $request->estado);
         }
 
+        if ($request->filled('categoria_id')) {
+            $query->where('categoria_id', $request->categoria_id);
+        }
+
         $tasks = $query->get();
-        return view('tasks.index', compact('tasks'));
+        $categories = $this->categorias();
+        return view('tasks.index', compact('tasks', 'categorias'));
     }
 
     public function create()
@@ -34,20 +39,9 @@ class TaskController extends Controller
 
     public function store(Request $request)
     {
-        $data = $request->validate([
-            'titulo'       => 'required|string|max:150',
-            'descripcion'  => 'nullable|string',
-            'emoji'        => 'nullable|string|max:4',
-            'prioridad'    => 'required|in:baja,media,alta',
-            'estado'       => 'nullable|in:pendiente,en_progreso,completada',
-            'categoria_id' => 'nullable|exists:categorias,id',
-            'fecha_fin'    => 'nullable|date',
-            'negrita'      => 'nullable|boolean',
-            'cursiva'      => 'nullable|boolean',
-        ]);
+        $data = $request->validate($this->taskRules());
 
         Auth::user()->tareas()->create(array_merge($data, [
-            'usuario_id' => Auth::id(),
             'estado'     => $data['estado'] ?? 'pendiente',
             'negrita'    => $request->boolean('negrita'),
             'cursiva'    => $request->boolean('cursiva'),
@@ -67,17 +61,7 @@ class TaskController extends Controller
     {
         abort_if($task->usuario_id !== Auth::id(), 403);
 
-        $data = $request->validate([
-            'titulo'       => 'required|string|max:150',
-            'descripcion'  => 'nullable|string',
-            'emoji'        => 'nullable|string|max:4',
-            'prioridad'    => 'required|in:baja,media,alta',
-            'estado'       => 'required|in:pendiente,en_progreso,completada',
-            'categoria_id' => 'nullable|exists:categorias,id',
-            'fecha_fin'    => 'nullable|date',
-            'negrita'      => 'nullable|boolean',
-            'cursiva'      => 'nullable|boolean',
-        ]);
+        $data = $request->validate($this->taskRules(true));
 
         $task->update(array_merge($data, [
             'negrita' => $request->boolean('negrita'),
@@ -103,5 +87,19 @@ class TaskController extends Controller
         abort_if($task->usuario_id !== Auth::id(), 403);
         $task->delete();
         return back()->with('success', 'Tarea eliminada.');
+    }
+
+    private function taskRules(bool $update = false): array {
+        return [
+            'titulo'       => 'required|string|max:150',
+            'descripcion'  => 'nullable|string',
+            'emoji'        => 'nullable|string|max:4',
+            'prioridad'    => 'required|in:baja,media,alta',
+            'estado'       => ($update ? 'required' : 'nullable') . '|in:pendiente,en_progreso,completada',
+            'categoria_id' => 'nullable|exists:categorias,id',
+            'fecha_fin'    => 'nullable|date',
+            'negrita'      => 'nullable|boolean',
+            'cursiva'      => 'nullable|boolean',
+        ];
     }
 }

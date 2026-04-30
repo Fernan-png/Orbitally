@@ -83,7 +83,7 @@
 
         <!-- Visual options -->
         <div style="margin-top:1.5rem; padding-top:1.5rem; border-top:1px solid var(--border-subtle);">
-            <div style="font-size:0.72rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--text-dim); margin-bottom:1rem;">Opciones visuales</div>
+            <div style="font-size:0.75rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--text-dim); margin-bottom:1rem;">Opciones visuales</div>
             <div style="display:flex; gap:2rem; align-items:center;">
                 <label style="display:flex; align-items:center; gap:0.5rem; cursor:pointer; font-size:0.82rem; color:rgba(180,200,240,0.7);">
                     <input type="checkbox" name="negrita" value="1" {{ old('negrita', $task->negrita ?? false) ? 'checked' : '' }}
