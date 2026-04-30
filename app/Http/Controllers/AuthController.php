@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
-use App\Models\Categoria;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -53,18 +52,6 @@ class AuthController extends Controller
             'email'    => $data['email'],
             'password' => Hash::make($data['password']),
         ]);
-
-        // Crear las categorías predeterminadas para un nuevo usuario
-        $defaultCats = [
-            ['nombre' => 'Laboral',  'prioridad' => 1, 'color_borde' => '#4dcfcf'],
-            ['nombre' => 'Personal', 'prioridad' => 2, 'color_borde' => '#c9a84c'],
-            ['nombre' => 'Estudios', 'prioridad' => 3, 'color_borde' => '#88aaff'],
-            ['nombre' => 'Ocio',     'prioridad' => 4, 'color_borde' => '#aaffaa'],
-        ];
-
-        foreach ($defaultCats as $cat) {
-            Categoria::create(array_merge($cat, ['usuario_id' => $user->id]));
-        }
 
         Auth::login($user);
         $request->session()->regenerate();

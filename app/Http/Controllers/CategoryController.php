@@ -10,8 +10,10 @@ class CategoryController extends Controller
 {
     public function index()
     {
-        $categorias = Auth::user()->categorias()->orderBy('prioridad')->get();
-        return view('categories.index', compact('categorias'));
+        $predefinidas   = Categoria::whereNull('usuario_id')->orderBy('prioridad')->get();
+        $personalizadas = Auth::user()->categorias()->orderBy('prioridad')->get();
+
+        return view('categorias.index', compact('predefinidas', 'personalizadas'));
     }
 
     public function store(Request $request)
@@ -26,6 +28,7 @@ class CategoryController extends Controller
             'nombre'      => $data['nombre'],
             'color_borde' => $data['color_borde'] ?? '#4dcfcf',
             'prioridad'   => $request->integer('prioridad', 1),
+            'es_predefinida' => false,
         ]);
 
         return back()->with('success', 'Categoría creada correctamente.');

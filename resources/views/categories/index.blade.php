@@ -12,38 +12,46 @@
 <div style="display:grid; grid-template-columns:1fr 340px; gap:1.5rem; align-items:start;">
 
     {{-- Lista de categorías --}}
-    <div class="panel">
-        @forelse($categorias as $cat)
-            <div style="padding:1rem 1.5rem; border-bottom:1px solid var(--border-subtle); display:flex; align-items:center; gap:1rem;">
-                <div style="width:4px; height:36px; border-radius:2px; flex-shrink:0; background:{{ $cat->color_borde }};"></div>
-                <div style="flex:1;">
-                    <div style="font-size:0.90rem; color:var(--star-white);">{{ $cat->nombre }}</div>
-                    <div style="font-size:0.75rem; color:var(--text-dim); margin-top:2px;">
-                        {{ $cat->tareas()->count() }} tareas
-                    </div>
-                </div>
-                <form method="POST" action="{{ route('categorias.destroy', $cat->id) }}"
-                      onsubmit="return confirm('¿Eliminar esta categoría? Las tareas asociadas quedarán sin categoría.')">
-                    @csrf
-                    @method('DELETE')
-                    <button type="submit" style="
-                        padding:0.35rem 0.75rem;
-                        font-family:'Jost',sans-serif;
-                        font-size:0.72rem;
-                        color:rgba(255,100,80,0.6);
-                        background:rgba(255,100,80,0.06);
-                        border:1px solid rgba(255,100,80,0.15);
-                        border-radius:2px;
-                        cursor:pointer;
-                    ">Eliminar</button>
-                </form>
-            </div>
-        @empty
-            <div style="padding:3rem; text-align:center; color:var(--text-dim); font-size:0.85rem;">
-                No tienes categorías todavía. Crea la primera desde el formulario.
-            </div>
-        @endforelse
+    {{-- Predefinidas --}}
+    <div style="font-size:0.7rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--text-dim); padding:1rem 1.5rem 0.5rem;">
+        Categorías generales
     </div>
+    @foreach($predefinidas as $cat)
+        <div style="padding:1rem 1.5rem; border-bottom:1px solid var(--border-subtle); display:flex; align-items:center; gap:1rem;">
+            <div style="width:4px; height:36px; border-radius:2px; flex-shrink:0; background:{{ $cat->color_borde }};"></div>
+            <div style="flex:1;">
+                <div style="font-size:0.88rem; color:var(--star-white);">{{ $cat->nombre }}</div>
+                <div style="font-size:0.72rem; color:var(--text-dim); margin-top:2px;">{{ $cat->tareas()->count() }} tareas</div>
+            </div>
+            <span style="font-size:0.68rem; color:var(--text-dim); letter-spacing:0.05em;">global</span>
+        </div>
+    @endforeach
+
+    {{-- Personalizadas --}}
+    <div style="font-size:0.7rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--text-dim); padding:1rem 1.5rem 0.5rem; margin-top:0.5rem;">
+        Mis categorías
+    </div>
+    @forelse($personalizadas as $cat)
+        <div style="padding:1rem 1.5rem; border-bottom:1px solid var(--border-subtle); display:flex; align-items:center; gap:1rem;">
+            <div style="width:4px; height:36px; border-radius:2px; flex-shrink:0; background:{{ $cat->color_borde }};"></div>
+            <div style="flex:1;">
+                <div style="font-size:0.88rem; color:var(--star-white);">{{ $cat->nombre }}</div>
+                <div style="font-size:0.72rem; color:var(--text-dim); margin-top:2px;">{{ $cat->tareas()->count() }} tareas</div>
+            </div>
+            <form method="POST" action="{{ route('categorias.destroy', $cat->id) }}"
+                onsubmit="return confirm('¿Eliminar esta categoría? Las tareas asociadas quedarán sin categoría.')">
+                @csrf
+                @method('DELETE')
+                <button type="submit" style="padding:0.35rem 0.75rem; font-family:'Jost',sans-serif; font-size:0.72rem; color:rgba(255,100,80,0.6); background:rgba(255,100,80,0.06); border:1px solid rgba(255,100,80,0.15); border-radius:2px; cursor:pointer;">
+                    Eliminar
+                </button>
+            </form>
+        </div>
+    @empty
+        <div style="padding:2rem 1.5rem; text-align:center; color:var(--text-dim); font-size:0.85rem;">
+            No tienes categorías personalizadas todavía.
+        </div>
+    @endforelse
 
     {{-- Formulario nueva categoría --}}
     <div class="panel" style="padding:1.5rem;">

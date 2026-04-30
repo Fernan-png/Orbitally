@@ -11,7 +11,10 @@ class TaskController extends Controller
 {
     private function categorias()
     {
-        return Categoria::where('usuario_id', Auth::id())->orderBy('prioridad')->get();
+        $predefinidas   = Categoria::whereNull('usuario_id')->orderBy('prioridad')->get();
+        $personalizadas = Categoria::where('usuario_id', Auth::id())->orderBy('prioridad')->get();
+
+        return $predefinidas->merge($personalizadas);
     }
 
     public function index(Request $request)

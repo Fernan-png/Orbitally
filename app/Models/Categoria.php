@@ -12,6 +12,7 @@ class Categoria extends Model
         'nombre',
         'prioridad',
         'color_borde',
+        'es_predefinida',
         'usuario_id',
     ];
 
@@ -24,4 +25,8 @@ class Categoria extends Model
     {
         return $this->hasMany(Tarea::class, 'categoria_id');
     }
+
+    protected $casts = [
+        'es_predefinida' => 'boolean',
+    ];
 }
