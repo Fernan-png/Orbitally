@@ -13,7 +13,8 @@ class CategoryController extends Controller
         $predefinidas   = Categoria::whereNull('usuario_id')->orderBy('prioridad')->get();
         $personalizadas = Auth::user()->categorias()->orderBy('prioridad')->get();
 
-        return view('categorias.index', compact('predefinidas', 'personalizadas'));
+        $categories = $predefinidas->merge($personalizadas);
+        return view('categories.index', compact('categories'));
     }
 
     public function store(Request $request)

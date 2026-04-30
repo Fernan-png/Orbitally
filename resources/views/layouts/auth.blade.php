@@ -11,11 +11,12 @@
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
     <style>
         :root {
-            --space-deep: #03060f;
-            --accent-gold: #eab31c;
-            --star-white: #e8edf8;
-            --text-dim: rgba(180, 200, 240, 0.55);
-            --border-subtle: rgba(255,255,255,0.07);
+            --space-deep:    #03060f;
+            --accent-gold:   #c9a84c;
+            --star-white:    #e8edf8;
+            --text-dim:      rgba(180, 200, 240, 0.55);
+            --border-subtle: rgba(255, 255, 255, 0.07);
+            --panel-bg:      rgba(5, 10, 22, 0.92);
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -30,6 +31,7 @@
             justify-content: center;
         }
 
+        /* Starfield */
         body::before {
             content: '';
             position: fixed; inset: 0; z-index: 0;
@@ -42,26 +44,42 @@
                 radial-gradient(1.5px 1.5px at 85% 45%, #ffffff66 0%, transparent 100%),
                 radial-gradient(1px 1px at 15% 70%, #ffffff33 0%, transparent 100%),
                 radial-gradient(1px 1px at 90% 75%, #ffffff44 0%, transparent 100%),
-                radial-gradient(1px 1px at 48% 28%, #ffffff55 0%, transparent 100%);
+                radial-gradient(1px 1px at 48% 28%, #ffffff55 0%, transparent 100%),
+                radial-gradient(1px 1px at 33% 85%, #ffffff33 0%, transparent 100%),
+                radial-gradient(1.5px 1.5px at 62% 5%, #ffffff66 0%, transparent 100%),
+                radial-gradient(1px 1px at 78% 92%, #ffffff22 0%, transparent 100%);
             pointer-events: none;
+        }
+
+        /* Subtle glow under card */
+        body::after {
+            content: '';
+            position: fixed;
+            bottom: 0; left: 50%;
+            transform: translateX(-50%);
+            width: 600px; height: 300px;
+            background: radial-gradient(ellipse at center bottom, rgba(201,168,76,0.06) 0%, transparent 70%);
+            pointer-events: none;
+            z-index: 0;
         }
 
         .auth-card {
             position: relative; z-index: 1;
-            background: rgba(5, 10, 22, 0.92);
-            border: 1px solid rgba(201,168,76,0.15);
+            background: var(--panel-bg);
+            border: 1px solid rgba(201, 168, 76, 0.18);
             border-radius: 4px;
             width: 100%;
             max-width: 400px;
             padding: 40px;
-            backdrop-filter: blur(12px);
+            backdrop-filter: blur(16px);
+            box-shadow: 0 32px 64px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.03) inset;
         }
 
         .auth-logo {
             font-family: 'Cinzel', serif;
             font-size: 28px;
             font-weight: 600;
-            letter-spacing: 0.12em;
+            letter-spacing: 0.15em;
             background: linear-gradient(135deg, #e8d5a0, var(--accent-gold));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -72,75 +90,78 @@
 
         .auth-subtitle {
             text-align: center;
-            font-size: 11.52px;
+            font-size: 11px;
             font-weight: 300;
             letter-spacing: 0.3em;
             text-transform: uppercase;
-            color: var(--color-slate-400);
-            margin-bottom: 32px;
+            color: var(--text-dim);
+            margin-bottom: 28px;
         }
 
         .auth-separator {
             height: 1px;
-            background: linear-gradient(90deg, transparent, rgba(201,168,76,0.3), transparent);
-            margin-bottom: 32px;
+            background: linear-gradient(90deg, transparent, rgba(201,168,76,0.35), transparent);
+            margin-bottom: 28px;
         }
 
-        .form-group { margin-bottom: 20px; }
+        .form-group { margin-bottom: 18px; }
 
         .form-label {
             display: block;
-            font-size: 11.50px;
+            font-size: 11px;
             font-weight: 500;
-            letter-spacing: 0.1em;
+            letter-spacing: 0.12em;
             text-transform: uppercase;
-            color: var(--color-slate-400);
-            margin-bottom: 6.4px;
+            color: var(--text-dim);
+            margin-bottom: 7px;
         }
 
         .form-input {
             width: 100%;
-            background: rgba(255,255,255,0.04);
-            border: 1px solid rgba(255,255,255,0.08);
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.09);
             border-radius: 2px;
-            padding: 10.5px 14.5px;
+            padding: 11px 14px;
             font-family: 'Jost', sans-serif;
-            font-size: 13.6px;
+            font-size: 14px;
             color: var(--star-white);
             outline: none;
-            transition: border-color 0.2s;
+            transition: border-color 0.2s, background 0.2s;
         }
-        .form-input::placeholder { color: rgba(180,200,240,0.25); }
-        .form-input:focus { border-color: rgba(201,168,76,0.45); }
-
-        .form-error {
-            font-size: 12px;
-            color: #ff8866;
-            margin-top: 5px;
+        .form-input::placeholder { color: rgba(180, 200, 240, 0.22); }
+        .form-input:focus {
+            border-color: rgba(201, 168, 76, 0.5);
+            background: rgba(255, 255, 255, 0.06);
         }
 
         .btn-submit {
             width: 100%;
             padding: 12px;
             font-family: 'Cinzel', serif;
-            font-size: 12.8px;
+            font-size: 12px;
             font-weight: 600;
-            letter-spacing: 0.18em;
+            letter-spacing: 0.2em;
             text-transform: uppercase;
             color: #03060f;
             background: linear-gradient(135deg, #e8d5a0, var(--accent-gold));
             border: none;
             border-radius: 2px;
             cursor: pointer;
-            transition: opacity 0.2s, transform 0.2s;
+            transition: opacity 0.2s, transform 0.15s, box-shadow 0.2s;
             margin-top: 8px;
+            box-shadow: 0 4px 16px rgba(201, 168, 76, 0.2);
         }
-        .btn-submit:hover { opacity: 0.9; transform: translateY(-1px); }
+        .btn-submit:hover {
+            opacity: 0.92;
+            transform: translateY(-1px);
+            box-shadow: 0 8px 24px rgba(201, 168, 76, 0.28);
+        }
+        .btn-submit:active { transform: translateY(0); }
 
         .auth-footer {
             text-align: center;
             margin-top: 24px;
-            font-size: 12.48px;
+            font-size: 13px;
             color: var(--text-dim);
         }
         .auth-footer a {
@@ -148,16 +169,17 @@
             text-decoration: none;
             transition: opacity 0.2s;
         }
-        .auth-footer a:hover { opacity: 0.8; }
+        .auth-footer a:hover { opacity: 0.75; }
 
         .alert-error {
-            padding: 11.2px 16px;
-            background: rgba(255,100,80,0.1);
-            border: 1px solid rgba(255,100,80,0.25);
+            padding: 11px 14px;
+            background: rgba(255, 100, 80, 0.08);
+            border: 1px solid rgba(255, 100, 80, 0.22);
             border-radius: 2px;
-            font-size: 12.8px;
+            font-size: 13px;
             color: #ff8866;
             margin-bottom: 20px;
+            line-height: 1.5;
         }
 
         .back-link {
@@ -165,19 +187,16 @@
             top: 24px;
             left: 24px;
             font-size: 12px;
-            color: var(--star-white);
+            color: rgba(180, 200, 240, 0.45);
             text-decoration: none;
             display: flex;
             align-items: center;
-            gap: 6.4px;
-            letter-spacing: 0.05em;
+            gap: 6px;
+            letter-spacing: 0.06em;
             transition: color 0.2s;
             z-index: 10;
         }
-        .back-link:hover { 
-            color: #b3b3b3;
-            opacity: 0.75;
-        }
+        .back-link:hover { color: var(--star-white); }
     </style>
 </head>
 <body>

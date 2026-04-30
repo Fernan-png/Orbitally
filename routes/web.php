@@ -15,22 +15,28 @@ Route::middleware('guest')->group(function () {
     Route::post('/login',   [AuthController::class, 'login']);
     Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
     Route::post('/register',[AuthController::class, 'register']);
+
+    // Guardar estado del tema por usuario
+    Route::post('/tema', function () {
+        $user = Auth::user();
+        $user->tema = $user->tema === 'oscuro' ? 'claro' : 'oscuro';
+        $user->save();
+        return back();
+    })->name('tema.toggle');
+
+
 });
 
 Route::post('/logout', [AuthController::class, 'logout'])
     ->middleware('auth')
     ->name('logout');
 
-Route::get('/categorias',              [CategoryController::class, 'index'])->name('categorias.index');
-Route::post('/categorias',             [CategoryController::class, 'store'])->name('categorias.store');
-Route::delete('/categorias/{categoria}', [CategoryController::class, 'destroy'])->name('categorias.destroy');
-
 // --- Protected -----------------------------------
 Route::middleware('auth')->group(function () {
 
     // Dashboard
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-    Route::get('/calendario', [DashboardController::class, 'calendar'])->name('calendar');
+    Route::get('/calendar', [DashboardController::class, 'calendar'])->name('calendar');
 
     // Tasks (resourceful)
     Route::resource('tasks', TaskController::class)->except(['show']);

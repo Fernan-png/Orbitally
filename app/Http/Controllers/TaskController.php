@@ -31,13 +31,13 @@ class TaskController extends Controller
 
         $tasks = $query->get();
         $categories = $this->categorias();
-        return view('tasks.index', compact('tasks', 'categorias'));
+        return view('tasks.index', compact('tasks', 'categories'));
     }
 
     public function create()
     {
-        $categorias = $this->categorias();
-        return view('tasks.form', compact('categorias'));
+        $categories = $this->categorias();
+        return view('tasks.form', compact('categories'));
     }
 
     public function store(Request $request)
@@ -57,7 +57,7 @@ class TaskController extends Controller
     {
         abort_if($task->usuario_id !== Auth::id(), 403);
         $categorias = $this->categorias();
-        return view('tasks.form', compact('task', 'categorias'));
+        return view('tasks.form', compact('task', 'categories'));
     }
 
     public function update(Request $request, Tarea $task)
