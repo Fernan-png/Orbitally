@@ -49,4 +49,5 @@ Route::middleware('auth')->group(function () {
     Route::get('/pomodoro',                              [PomodoroController::class, 'index'])->name('pomodoro.index');
     Route::post('/pomodoro',                             [PomodoroController::class, 'store'])->name('pomodoro.store');
     Route::patch('/pomodoro/{sesion}/finish',            [PomodoroController::class, 'finish'])->name('pomodoro.finish');
+    Route::delete('/pomodoro/historial',                 [PomodoroController::class, 'clearHistory'])->name('pomodoro.clearHistory');
 });

@@ -65,8 +65,8 @@
     @else
         @foreach($tasks as $task)
         @php
-            $prioColors = ['alta' => '#ff8866', 'media' => '#ffcc55', 'baja' => '#4dcfcf'];
-            $statusColors = ['completada' => '#4dcfcf', 'en_progreso' => '#88aaff', 'pendiente' => '#ffcc55'];
+            $prioColors = ['alta' => '#ff8866', 'media' => '#a78bfa', 'baja' => '#4dcfcf'];
+            $statusColors = ['completada' => '#4dcfcf', 'en_progreso' => '#88aaff', 'pendiente' => '#a78bfa'];
             $borderColor = $task->categoria->color_borde ?? ($prioColors[$task->prioridad] ?? '#4dcfcf');
         @endphp
         <div style="padding:14px 20px; border-bottom:1px solid var(--border-subtle); display:flex; align-items:center; gap:14px;
@@ -106,8 +106,8 @@
                     {{-- Badge estado --}}
                     <span style="display:inline-flex; align-items:center; gap:4px;">
                         <span style="width:6px; height:6px; border-radius:50%;
-                                     background:{{ $statusColors[$task->estado] ?? '#ffcc55' }};
-                                     box-shadow:0 0 5px {{ $statusColors[$task->estado] ?? '#ffcc55' }}66;"></span>
+                                     background:{{ $statusColors[$task->estado] ?? '#a78bfa' }};
+                                     box-shadow:0 0 5px {{ $statusColors[$task->estado] ?? '#a78bfa' }}66;"></span>
                         {{ ['pendiente' => 'Pendiente', 'en_progreso' => 'En progreso', 'completada' => 'Completada'][$task->estado] ?? $task->estado }}
                     </span>
                     @if($task->categoria)

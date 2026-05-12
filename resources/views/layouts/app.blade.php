@@ -23,7 +23,7 @@
             --bg-sidebar:       rgba(5, 10, 22, 0.97);
             --panel-bg:         rgba(8, 14, 30, 0.88);
             --border-subtle:    rgba(255, 255, 255, 0.07);
-            --accent-gold:      #c9a84c;
+            --accent-gold:      #8b5cf6;
             --accent-teal:      #4dcfcf;
             --star-white:       #e8edf8;
             --text-dim:         rgba(180, 200, 240, 0.55);
@@ -36,19 +36,24 @@
 
         /* ── Tema claro ─────────────────────────────────────────────── */
         html.light {
-            --bg-base:          #f2f4f9;
-            --bg-sidebar:       rgba(255, 255, 255, 0.98);
-            --panel-bg:         rgba(255, 255, 255, 0.95);
-            --border-subtle:    rgba(0, 0, 0, 0.07);
-            --accent-gold:      #a87828;
+            --bg-base:          #f5f3ff;
+            --bg-sidebar:       rgba(250, 249, 255, 0.98);
+            --panel-bg:         rgba(255, 255, 255, 0.98);
+            --border-subtle:    rgba(109, 40, 217, 0.1);
+            --accent-gold:      #6d28d9;
             --accent-teal:      #0a9494;
-            --star-white:       #111827;
-            --text-dim:         rgba(30, 50, 90, 0.55);
-            --text-muted:       rgba(30, 50, 90, 0.32);
-            --btn-logout-color: rgba(30, 50, 90, 0.45);
+            --star-white:       #1e1b4b;
+            --text-dim:         rgba(76, 29, 149, 0.55);
+            --text-muted:       rgba(76, 29, 149, 0.32);
+            --btn-logout-color: rgba(76, 29, 149, 0.45);
             --stars-opacity:    0;
-            --sidebar-shadow:   4px 0 24px rgba(0,0,0,0.06);
-            --panel-shadow:     0 2px 12px rgba(0,0,0,0.06);
+            --sidebar-shadow:   4px 0 32px rgba(109, 40, 217, 0.09);
+            --panel-shadow:     0 2px 16px rgba(109, 40, 217, 0.08);
+        }
+
+        html.light body {
+            background: linear-gradient(160deg, #f5f3ff 0%, #fdf8ff 50%, #ede9fe 100%);
+            background-attachment: fixed;
         }
 
         * { box-sizing: border-box; }
@@ -107,7 +112,7 @@
             font-size:      20px;
             font-weight:    600;
             letter-spacing: 3px;
-            background:     linear-gradient(135deg, #e8d5a0, var(--accent-gold));
+            background:     linear-gradient(135deg, #c4b5fd, var(--accent-gold));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
@@ -125,6 +130,12 @@
             -webkit-text-fill-color: var(--text-dim);
             margin-top:              3px;
             transition:              color 0.3s;
+        }
+        html.light .sidebar-logo {
+            background:     linear-gradient(135deg, #7c3aed, #4c1d95);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
         nav.sidebar-nav {
@@ -155,11 +166,11 @@
         .nav-link:hover {
             color:             var(--star-white);
             background:        rgba(128, 128, 128, 0.05);
-            border-left-color: rgba(201, 168, 76, 0.35);
+            border-left-color: rgba(139, 92, 246, 0.35);
         }
         .nav-link.active {
             color:             var(--accent-gold);
-            background:        rgba(201, 168, 76, 0.06);
+            background:        rgba(139, 92, 246, 0.06);
             border-left-color: var(--accent-gold);
         }
 
@@ -270,19 +281,19 @@
             font-size:       13px;
             font-weight:     500;
             letter-spacing:  0.5px;
-            color:           #03060f;
-            background:      linear-gradient(135deg, #e8d5a0, var(--accent-gold));
+            color:           #ffffff;
+            background:      linear-gradient(135deg, #8b5cf6, #4c1d95);
             border:          none;
             border-radius:   3px;
             cursor:          pointer;
             text-decoration: none;
             transition:      opacity 0.2s, transform 0.15s, box-shadow 0.2s;
-            box-shadow:      0 3px 12px rgba(201,168,76,0.18);
+            box-shadow:      0 3px 12px rgba(139,92,246,0.18);
         }
         .btn-primary:hover {
             opacity:    0.9;
             transform:  translateY(-1px);
-            box-shadow: 0 6px 20px rgba(201,168,76,0.25);
+            box-shadow: 0 6px 20px rgba(139,92,246,0.25);
         }
         .btn-primary:active { transform: translateY(0); }
 
@@ -323,7 +334,7 @@
             transition:    border-color 0.2s, background 0.2s;
         }
         .form-input::placeholder { color: var(--text-muted); }
-        .form-input:focus        { border-color: rgba(201, 168, 76, 0.5); background: rgba(128,128,128,0.07); }
+        .form-input:focus        { border-color: rgba(139, 92, 246, 0.5); background: rgba(128,128,128,0.07); }
 
         .form-label {
             display:        block;
@@ -391,7 +402,7 @@
         }
         .modal-box {
             background:    var(--panel-bg);
-            border:        1px solid rgba(201, 168, 76, 0.2);
+            border:        1px solid rgba(139, 92, 246, 0.2);
             border-radius: 4px;
             width:         100%;
             max-width:     480px;
@@ -422,7 +433,7 @@
         <nav class="sidebar-nav">
             <a href="{{ route('dashboard') }}"
                class="nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}">
-                <i class="fa-regular fa-gauge-high"></i>
+                <i class="fa-solid fa-gauge-high"></i>
                 Dashboard
             </a>
             <?php // todo -> Corregir el icono ?>
@@ -443,7 +454,7 @@
             </a>
             <a href="{{ route('pomodoro.index') }}"
                 class="nav-link {{ request()->routeIs('pomodoro.*') ? 'active' : '' }}">
-                <i class="fa-regular fa-stopwatch"></i>
+                <i class="fa-solid fa-stopwatch"></i>
                 Pomodoro
             </a>
         </nav>
@@ -476,7 +487,7 @@
             <form method="POST" action="{{ route('logout') }}">
                 @csrf
                 <button type="submit" class="btn-logout" style="width:100%;">
-                    <i class="fa-regular fa-power-off" style="width:15px; text-align:center;"></i>
+                    <i class="fa-solid fa-power-off" style="width:15px; text-align:center;"></i>
                     Cerrar sesión
                 </button>
             </form>

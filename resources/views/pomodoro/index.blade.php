@@ -90,7 +90,7 @@
     }
     .duration-input::-webkit-inner-spin-button,
     .duration-input::-webkit-outer-spin-button { -webkit-appearance: none; }
-    .duration-input:focus { border-color: rgba(201,168,76,0.5); }
+    .duration-input:focus { border-color: rgba(139,92,246,0.5); }
     .duration-input:disabled { opacity: 0.4; cursor: not-allowed; }
 
     /* ── Historial row ────────────────────────────────────────── */
@@ -143,7 +143,7 @@
     }
     .preset-btn:hover:not(:disabled) {
         color: var(--star-white);
-        border-color: rgba(201,168,76,0.35);
+        border-color: rgba(139,92,246,0.35);
     }
     .preset-btn:disabled { opacity: 0.3; cursor: not-allowed; }
 </style>
@@ -223,8 +223,8 @@
 
             {{-- Iniciar --}}
             <button id="btn-start" class="pomodoro-btn"
-                    style="background:linear-gradient(135deg,#e8d5a0,#c9a84c); color:#03060f;
-                           box-shadow:0 3px 12px rgba(201,168,76,0.18);">
+                    style="background:linear-gradient(135deg,#8b5cf6,#4c1d95); color:#ffffff;
+                           box-shadow:0 3px 12px rgba(139,92,246,0.18);">
                 <i class="fa-solid fa-play"></i>
                 Iniciar
             </button>
@@ -235,6 +235,14 @@
                            border:1px solid rgba(136,170,255,0.18);">
                 <i class="fa-solid fa-pause"></i>
                 Pausar
+            </button>
+
+            {{-- Saltar fase --}}
+            <button id="btn-skip" class="pomodoro-btn" disabled
+                    style="background:rgba(128,128,128,0.07); color:rgba(180,200,240,0.5);
+                           border:1px solid rgba(180,200,240,0.12);">
+                <i class="fa-solid fa-forward-step"></i>
+                Saltar
             </button>
 
             {{-- Cancelar --}}
@@ -265,7 +273,7 @@
                                    display:flex; align-items:center; justify-content:center; transition:all 0.2s;"
                             onmouseover="this.style.color='var(--star-white)'"
                             onmouseout="this.style.color='var(--text-dim)'">−</button>
-                    <input type="number" id="study-time" class="duration-input" value="25" min="1" max="120">
+                    <input type="number" id="study-time" class="duration-input" value="25" min="1" max="120" step="1">
                     <button type="button" class="adj-btn" onclick="adjustTime('study', 5)"
                             style="width:26px; height:26px; border-radius:50%; border:1px solid var(--border-subtle);
                                    background:transparent; color:var(--text-dim); cursor:pointer; font-size:15px;
@@ -273,6 +281,9 @@
                             onmouseover="this.style.color='var(--star-white)'"
                             onmouseout="this.style.color='var(--text-dim)'">+</button>
                 </div>
+                <div id="study-error" style="font-size:10px; color:#ff8866; margin-top:6px;
+                                             min-height:14px; opacity:0; transition:opacity 0.2s;
+                                             letter-spacing:0.03em;"></div>
             </div>
 
             <div style="text-align:center;">
@@ -287,7 +298,7 @@
                                    display:flex; align-items:center; justify-content:center; transition:all 0.2s;"
                             onmouseover="this.style.color='var(--star-white)'"
                             onmouseout="this.style.color='var(--text-dim)'">−</button>
-                    <input type="number" id="break-time" class="duration-input" value="5" min="1" max="60">
+                    <input type="number" id="break-time" class="duration-input" value="5" min="1" max="60" step="1">
                     <button type="button" class="adj-btn" onclick="adjustTime('break', 1)"
                             style="width:26px; height:26px; border-radius:50%; border:1px solid var(--border-subtle);
                                    background:transparent; color:var(--text-dim); cursor:pointer; font-size:15px;
@@ -295,13 +306,16 @@
                             onmouseover="this.style.color='var(--star-white)'"
                             onmouseout="this.style.color='var(--text-dim)'">+</button>
                 </div>
+                <div id="break-error" style="font-size:10px; color:#ff8866; margin-top:6px;
+                                             min-height:14px; opacity:0; transition:opacity 0.2s;
+                                             letter-spacing:0.03em;"></div>
             </div>
 
             <div style="text-align:center;">
                 <div style="font-size:10px; letter-spacing:0.15em; text-transform:uppercase;
                             color:var(--text-dim); margin-bottom:10px;">
                     Tarea asociada
-                    <span style="color:rgba(201,168,76,0.6); font-size:9px; display:block; margin-top:2px; letter-spacing:0.05em; text-transform:none;">
+                    <span style="color:rgba(139,92,246,0.6); font-size:9px; display:block; margin-top:2px; letter-spacing:0.05em; text-transform:none;">
                         Solo Estudios / Laboral
                     </span>
                 </div>
@@ -337,12 +351,25 @@
     {{-- ── Sidebar: historial ── --}}
     <aside>
         <div class="panel">
-            <div style="padding:16px 18px; border-bottom:1px solid var(--border-subtle);
-                        font-size:11px; font-weight:500; letter-spacing:0.12em;
-                        text-transform:uppercase; color:var(--text-dim);">
-                Últimas sesiones
+            <div style="padding:14px 18px; border-bottom:1px solid var(--border-subtle);
+                        display:flex; align-items:center; justify-content:space-between;">
+                <span style="font-size:11px; font-weight:500; letter-spacing:0.12em;
+                             text-transform:uppercase; color:var(--text-dim);">
+                    Últimas sesiones
+                </span>
+                <button id="btn-clear-history" title="Borrar historial"
+                        style="background:none; border:none; cursor:pointer; font-size:11px;
+                               color:rgba(255,100,80,0.45); padding:0; transition:color 0.2s;
+                               display:flex; align-items:center; gap:4px; letter-spacing:0.04em;
+                               font-family:'Jost',sans-serif;"
+                        onmouseover="this.style.color='rgba(255,100,80,0.85)'"
+                        onmouseout="this.style.color='rgba(255,100,80,0.45)'">
+                    <i class="fa-solid fa-trash-can" style="font-size:11px;"></i>
+                    Borrar
+                </button>
             </div>
 
+            <div id="historial-list">
             @forelse($historial as $sesion)
             @php
                 $isComp = $sesion->estado === 'completada';
@@ -354,7 +381,7 @@
                     : ($sesion->estado === 'activa' ? 'fa-rotate' : 'fa-circle-xmark');
             @endphp
             <div class="historial-row">
-                <i class="fa-regular {{ $icon }}" style="color:{{ $color }}; font-size:14px; flex-shrink:0;"></i>
+                <i class="{{ $isComp || $sesion->estado === 'cancelada' ? 'fa-regular' : 'fa-solid' }} {{ $icon }}" style="color:{{ $color }}; font-size:14px; flex-shrink:0;"></i>
                 <div style="flex:1; min-width:0;">
                     <div style="font-size:13px; color:var(--star-white);">
                         {{ $sesion->duracion_estudio }}m / {{ $sesion->duracion_descanso }}m
@@ -376,6 +403,7 @@
                 Todavía no hay sesiones registradas.
             </div>
             @endforelse
+            </div>{{-- #historial-list --}}
         </div>
     </aside>
 
@@ -387,22 +415,27 @@
 (function () {
     'use strict';
 
-    const CSRF        = document.querySelector('meta[name="csrf-token"]').content;
-    const CIRCUMFERENCE = 2 * Math.PI * 104; // ≈ 653.45
+    const CSRF          = document.querySelector('meta[name="csrf-token"]').content;
+    const CIRCUMFERENCE = 2 * Math.PI * 104;
 
     /* ── DOM ─────────────────────────────────────────── */
-    const timerDisplay = document.getElementById('timer-display');
-    const phaseBadge   = document.getElementById('phase-badge');
-    const cycleInfo    = document.getElementById('cycle-info');
-    const ringArc      = document.getElementById('ring-arc');
-    const ringWrapper  = document.getElementById('ring-wrapper');
-    const btnStart     = document.getElementById('btn-start');
-    const btnPause     = document.getElementById('btn-pause');
-    const btnCancel    = document.getElementById('btn-cancel');
-    const studyInput   = document.getElementById('study-time');
-    const breakInput   = document.getElementById('break-time');
-    const taskSelect   = document.getElementById('task-select');
-    const phaseFlash   = document.getElementById('phase-flash');
+    const timerDisplay    = document.getElementById('timer-display');
+    const phaseBadge      = document.getElementById('phase-badge');
+    const cycleInfo       = document.getElementById('cycle-info');
+    const ringArc         = document.getElementById('ring-arc');
+    const ringWrapper     = document.getElementById('ring-wrapper');
+    const btnStart        = document.getElementById('btn-start');
+    const btnPause        = document.getElementById('btn-pause');
+    const btnSkip         = document.getElementById('btn-skip');
+    const btnCancel       = document.getElementById('btn-cancel');
+    const btnClearHistory = document.getElementById('btn-clear-history');
+    const studyInput      = document.getElementById('study-time');
+    const breakInput      = document.getElementById('break-time');
+    const taskSelect      = document.getElementById('task-select');
+    const phaseFlash      = document.getElementById('phase-flash');
+    const studyError      = document.getElementById('study-error');
+    const breakError      = document.getElementById('break-error');
+    const historialList   = document.getElementById('historial-list');
 
     /* ── State ───────────────────────────────────────── */
     let intervalId   = null;
@@ -413,10 +446,11 @@
     let isPaused     = false;
     let cycleCount   = 1;
     let sessionStart = null;
+    let isTransition = false;
 
     /* ── Helpers ─────────────────────────────────────── */
-    const pad  = n => String(n).padStart(2, '0');
-    const fmt  = s => `${pad(Math.floor(s / 60))}:${pad(s % 60)}`;
+    const pad = n => String(n).padStart(2, '0');
+    const fmt = s => `${pad(Math.floor(s / 60))}:${pad(s % 60)}`;
 
     function setRing(remaining, total, color) {
         const offset = CIRCUMFERENCE * (1 - remaining / total);
@@ -427,11 +461,10 @@
 
     function setPhaseUI(study) {
         const color = study ? '#4dcfcf' : '#88aaff';
-        phaseBadge.textContent          = study ? 'Estudio' : 'Descanso';
-        phaseBadge.style.background     = study ? 'rgba(77,207,207,0.1)'  : 'rgba(136,170,255,0.1)';
-        phaseBadge.style.border         = `1px solid ${study ? 'rgba(77,207,207,0.22)' : 'rgba(136,170,255,0.22)'}`;
-        phaseBadge.style.color          = color;
-        // Cambiar clase de glow en el SVG wrapper (no en el panel)
+        phaseBadge.textContent      = study ? 'Estudio' : 'Descanso';
+        phaseBadge.style.background = study ? 'rgba(77,207,207,0.1)'  : 'rgba(136,170,255,0.1)';
+        phaseBadge.style.border     = `1px solid ${study ? 'rgba(77,207,207,0.22)' : 'rgba(136,170,255,0.22)'}`;
+        phaseBadge.style.color      = color;
         ringWrapper.classList.remove('ring-glow-study', 'ring-glow-break');
         ringWrapper.classList.add(study ? 'ring-glow-study' : 'ring-glow-break');
     }
@@ -444,6 +477,37 @@
 
     function updateTitle(secs) {
         document.title = `${isStudy ? '🔴' : '🟢'} ${fmt(secs)} — Orbitally`;
+    }
+
+    /* ── Validación ──────────────────────────────────── */
+    function hasDecimal(val) {
+        return /[.,]/.test(String(val));
+    }
+
+    function showErr(el, msg) {
+        el.textContent = msg;
+        el.style.opacity = '1';
+    }
+
+    function clearErr(el) {
+        el.style.opacity = '0';
+    }
+
+    function validateInputs() {
+        let valid = true;
+        if (hasDecimal(studyInput.value)) {
+            showErr(studyError, 'Usa solo números enteros');
+            valid = false;
+        } else {
+            clearErr(studyError);
+        }
+        if (hasDecimal(breakInput.value)) {
+            showErr(breakError, 'Usa solo números enteros');
+            valid = false;
+        } else {
+            clearErr(breakError);
+        }
+        return valid;
     }
 
     /* ── Lock / unlock config ────────────────────────── */
@@ -463,6 +527,7 @@
         });
         return r.json();
     }
+
     async function apiPatch(url, body) {
         const r = await fetch(url, {
             method: 'PATCH',
@@ -487,9 +552,7 @@
         intervalId = null;
 
         if (isStudy) {
-            // Cerrar sesión de estudio
             finishSession('completada', parseInt(studyInput.value, 10));
-            // Pasar a descanso
             isStudy      = false;
             totalSeconds = parseInt(breakInput.value, 10) * 60;
             secondsLeft  = totalSeconds;
@@ -499,7 +562,6 @@
             setRing(secondsLeft, totalSeconds, '#88aaff');
             intervalId = setInterval(tick, 1000);
         } else {
-            // Fin de descanso → nuevo ciclo de estudio
             cycleCount++;
             cycleInfo.textContent = `Ciclo ${cycleCount}`;
             isStudy      = true;
@@ -532,20 +594,21 @@
 
     /* ── Botones ─────────────────────────────────────── */
     btnStart.addEventListener('click', async () => {
-        // Resume desde pausa
         if (isPaused) {
             isPaused = false;
-            btnStart.innerHTML  = '<i class="fa-solid fa-play"></i> Iniciar';
-            btnStart.disabled   = true;
-            btnPause.disabled   = false;
-            btnPause.innerHTML  = '<i class="fa-solid fa-pause"></i> Pausar';
+            btnStart.innerHTML = '<i class="fa-solid fa-play"></i> Iniciar';
+            btnStart.disabled  = true;
+            btnPause.disabled  = false;
+            btnPause.innerHTML = '<i class="fa-solid fa-pause"></i> Pausar';
+            btnSkip.disabled   = false;
             intervalId = setInterval(tick, 1000);
             return;
         }
 
-        // Arranque fresco
-        isStudy      = true;
-        cycleCount   = 1;
+        if (!validateInputs()) return;
+
+        isStudy    = true;
+        cycleCount = 1;
         cycleInfo.textContent = 'Ciclo 1';
         totalSeconds = parseInt(studyInput.value, 10) * 60;
         secondsLeft  = totalSeconds;
@@ -553,11 +616,11 @@
         setPhaseUI(true);
         timerDisplay.textContent = fmt(secondsLeft);
         setRing(secondsLeft, totalSeconds, '#4dcfcf');
-
         lockConfig(true);
 
         btnStart.disabled  = true;
         btnPause.disabled  = false;
+        btnSkip.disabled   = false;
         btnCancel.disabled = false;
 
         const data = await apiPost('{{ route("pomodoro.store") }}', {
@@ -580,6 +643,51 @@
         btnStart.innerHTML = '<i class="fa-solid fa-play"></i> Reanudar';
     });
 
+    btnSkip.addEventListener('click', async () => {
+        if (isTransition) return;
+        isTransition = true;
+
+        clearInterval(intervalId);
+        intervalId = null;
+        isPaused   = false;
+
+        if (isStudy) {
+            if (sesionId) {
+                const elapsed = Math.round((Date.now() - sessionStart) / 60000);
+                await finishSession('completada', Math.max(1, elapsed));
+            }
+            isStudy      = false;
+            totalSeconds = parseInt(breakInput.value, 10) * 60;
+            secondsLeft  = totalSeconds;
+            flashPhase(false);
+            setPhaseUI(false);
+            timerDisplay.textContent = fmt(secondsLeft);
+            setRing(secondsLeft, totalSeconds, '#88aaff');
+            updateTitle(secondsLeft);
+            btnPause.disabled  = false;
+            btnPause.innerHTML = '<i class="fa-solid fa-pause"></i> Pausar';
+            btnStart.disabled  = true;
+            intervalId = setInterval(tick, 1000);
+        } else {
+            cycleCount++;
+            cycleInfo.textContent = `Ciclo ${cycleCount}`;
+            isStudy      = true;
+            totalSeconds = parseInt(studyInput.value, 10) * 60;
+            secondsLeft  = totalSeconds;
+            flashPhase(true);
+            setPhaseUI(true);
+            timerDisplay.textContent = fmt(secondsLeft);
+            setRing(secondsLeft, totalSeconds, '#4dcfcf');
+            updateTitle(secondsLeft);
+            btnPause.disabled  = false;
+            btnPause.innerHTML = '<i class="fa-solid fa-pause"></i> Pausar';
+            btnStart.disabled  = true;
+            await startNewStudy();
+        }
+
+        isTransition = false;
+    });
+
     btnCancel.addEventListener('click', async () => {
         if (!confirm('¿Cancelar la sesión actual?')) return;
         clearInterval(intervalId);
@@ -597,18 +705,28 @@
         location.reload();
     });
 
+    btnClearHistory.addEventListener('click', async () => {
+        if (!confirm('¿Borrar todo el historial de sesiones? Esta acción no se puede deshacer.')) return;
+        const r = await fetch('{{ route("pomodoro.clearHistory") }}', {
+            method: 'DELETE',
+            headers: { 'X-CSRF-TOKEN': CSRF },
+        });
+        if (r.ok) location.reload();
+    });
+
     function resetUI() {
         clearInterval(intervalId);
-        intervalId  = null;
-        isPaused    = false;
-        sesionId    = null;
-        isStudy     = true;
-        cycleCount  = 1;
+        intervalId   = null;
+        isPaused     = false;
+        sesionId     = null;
+        isStudy      = true;
+        cycleCount   = 1;
+        isTransition = false;
         cycleInfo.textContent = 'Ciclo 1';
 
-        const studyMins  = parseInt(studyInput.value, 10);
-        totalSeconds     = studyMins * 60;
-        secondsLeft      = totalSeconds;
+        const studyMins = parseInt(studyInput.value, 10);
+        totalSeconds    = studyMins * 60;
+        secondsLeft     = totalSeconds;
 
         timerDisplay.textContent = fmt(secondsLeft);
         setRing(secondsLeft, totalSeconds, '#4dcfcf');
@@ -619,6 +737,7 @@
         btnStart.innerHTML = '<i class="fa-solid fa-play"></i> Iniciar';
         btnPause.disabled  = true;
         btnPause.innerHTML = '<i class="fa-solid fa-pause"></i> Pausar';
+        btnSkip.disabled   = true;
         btnCancel.disabled = true;
         lockConfig(false);
     }
@@ -629,6 +748,7 @@
         if (type === 'study') {
             const val = Math.min(120, Math.max(1, parseInt(studyInput.value || 25) + delta));
             studyInput.value = val;
+            clearErr(studyError);
             if (!intervalId && isStudy) {
                 totalSeconds = val * 60;
                 secondsLeft  = totalSeconds;
@@ -637,6 +757,7 @@
             }
         } else {
             breakInput.value = Math.min(60, Math.max(1, parseInt(breakInput.value || 5) + delta));
+            clearErr(breakError);
         }
     };
 
@@ -644,25 +765,41 @@
         if (studyInput.disabled) return;
         studyInput.value = study;
         breakInput.value = brk;
+        clearErr(studyError);
+        clearErr(breakError);
         totalSeconds = study * 60;
         secondsLeft  = totalSeconds;
         timerDisplay.textContent = fmt(secondsLeft);
         setRing(secondsLeft, totalSeconds, '#4dcfcf');
     };
 
-    /* ── Init ────────────────────────────────────────── */
-    ringArc.style.strokeDasharray  = CIRCUMFERENCE;
-    ringArc.style.strokeDashoffset = 0;
-    timerDisplay.textContent = fmt(parseInt(studyInput.value, 10) * 60);
-
+    /* ── Listeners de inputs ─────────────────────────── */
     studyInput.addEventListener('input', () => {
         if (intervalId || isPaused) return;
-        const val    = Math.max(1, Math.min(120, parseInt(studyInput.value) || 25));
+        if (hasDecimal(studyInput.value)) {
+            showErr(studyError, 'Usa solo números enteros');
+            return;
+        }
+        clearErr(studyError);
+        const val = Math.max(1, Math.min(120, parseInt(studyInput.value) || 25));
         totalSeconds = val * 60;
         secondsLeft  = totalSeconds;
         timerDisplay.textContent = fmt(secondsLeft);
         setRing(secondsLeft, totalSeconds, '#4dcfcf');
     });
+
+    breakInput.addEventListener('input', () => {
+        if (hasDecimal(breakInput.value)) {
+            showErr(breakError, 'Usa solo números enteros');
+        } else {
+            clearErr(breakError);
+        }
+    });
+
+    /* ── Init ────────────────────────────────────────── */
+    ringArc.style.strokeDasharray  = CIRCUMFERENCE;
+    ringArc.style.strokeDashoffset = 0;
+    timerDisplay.textContent = fmt(parseInt(studyInput.value, 10) * 60);
 
 })();
 </script>

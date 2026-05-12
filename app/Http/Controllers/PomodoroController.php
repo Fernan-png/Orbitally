@@ -110,4 +110,13 @@ class PomodoroController extends Controller
 
         return response()->json(['ok' => true]);
     }
+
+    /**
+     * Elimina todo el historial de sesiones del usuario.
+     */
+    public function clearHistory()
+    {
+        Pomodoro::where('usuario_id', Auth::id())->delete();
+        return response()->json(['ok' => true]);
+    }
 }

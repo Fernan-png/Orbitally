@@ -71,10 +71,10 @@
                     $isComp = $task->estado === 'completada';
                     $color  = $isComp ? '#4dcfcf'
                         : ($task->prioridad === 'alta' ? '#ff8866'
-                        : ($task->prioridad === 'media' ? '#ffcc55' : 'rgba(180,200,240,0.7)'));
+                        : ($task->prioridad === 'media' ? '#a78bfa' : 'rgba(180,200,240,0.7)'));
                     $bg = $isComp ? 'rgba(77,207,207,0.07)'
                         : ($task->prioridad === 'alta' ? 'rgba(255,100,80,0.08)'
-                        : ($task->prioridad === 'media' ? 'rgba(255,180,50,0.08)' : 'rgba(255,255,255,0.03)'));
+                        : ($task->prioridad === 'media' ? 'rgba(139,92,246,0.08)' : 'rgba(255,255,255,0.03)'));
                 @endphp
                 <a href="{{ route('tasks.edit', $task->id) }}" title="{{ $task->titulo }}"
                    style="display:block; padding:2px 6px; border-radius:2px; font-size:11px; margin-bottom:2px;
@@ -120,7 +120,7 @@
                onmouseover="this.style.opacity='0.75'" onmouseout="this.style.opacity='1'">
                 <div style="width:3px; height:32px; border-radius:2px; flex-shrink:0;
                             opacity:{{ $task->estado === 'completada' ? '0.35' : '1' }};
-                            background:{{ $task->prioridad === 'alta' ? '#ff8866' : ($task->prioridad === 'media' ? '#ffcc55' : '#4dcfcf') }};"></div>
+                            background:{{ $task->prioridad === 'alta' ? '#ff8866' : ($task->prioridad === 'media' ? '#a78bfa' : '#4dcfcf') }};"></div>
                 <div style="flex:1; min-width:0;">
                     <div style="font-size:13px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
                                 color:{{ $task->estado === 'completada' ? 'var(--text-muted)' : 'var(--star-white)' }};
@@ -152,7 +152,7 @@
             <div style="display:flex; flex-direction:column; gap:8px;">
                 @foreach([
                     ['#ff8866', 'rgba(255,100,80,0.08)', 'Prioridad alta'],
-                    ['#ffcc55', 'rgba(255,180,50,0.08)', 'Prioridad media'],
+                    ['#a78bfa', 'rgba(139,92,246,0.08)', 'Prioridad media'],
                     ['#4dcfcf', 'rgba(77,207,207,0.08)', 'Completada / baja'],
                 ] as [$border, $bg, $label])
                 <div style="display:flex; align-items:center; gap:8px; font-size:12px; color:var(--text-dim);">

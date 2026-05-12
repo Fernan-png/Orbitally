@@ -25,11 +25,11 @@
             --space-mid: #060d1e;
             --nebula-blue: #0a1a3a;
             --star-white: #e8edf8;
-            --accent-gold: #eab31c;
+            --accent-gold: #8b5cf6;
             --accent-teal: #4dcfcf;
-            --accent-violet: #7c5cbf;
-            --sun-core: #ffdd88;
-            --sun-glow: #ff9933;
+            --accent-violet: #8b5cf6;
+            --sun-core: #c4b5fd;
+            --sun-glow: #7c3aed;
         }
 
         body {
@@ -86,11 +86,11 @@
             width: 72px; height: 72px;
             left: -36px; top: -36px;
             border-radius: 50%;
-            background: radial-gradient(circle at 35% 35%, #fff6cc, var(--sun-core) 40%, var(--sun-glow) 70%, #ff6600);
+            background: radial-gradient(circle at 35% 35%, #f5f3ff, var(--sun-core) 40%, var(--sun-glow) 70%, #5b21b6);
             box-shadow:
-                0 0 30px 15px #ffcc4440,
-                0 0 80px 40px #ff990020,
-                0 0 150px 80px #ff660010;
+                0 0 30px 15px #8b5cf640,
+                0 0 80px 40px #7c3aed20,
+                0 0 150px 80px #6d28d910;
             animation: sun-pulse 4s ease-in-out infinite;
         }
 
@@ -155,9 +155,9 @@
         }
 
         @media (min-width: 1440px) {
-            .orbit-1 { width: 400px; height: 400px; }
-            .orbit-2 { width: 700px; height: 700px; }
-            .orbit-3 { width: 1000px; height: 1000px; }
+            .orbit-1 { width: 320px; height: 320px; }
+            .orbit-2 { width: 560px; height: 560px; }
+            .orbit-3 { width: 800px; height: 800px; }
         }
 
         /* Planetas */
@@ -242,7 +242,7 @@
             font-size: clamp(40px, 6vw, 72px);
             font-weight: 700;
             letter-spacing: 2.5px;
-            background: linear-gradient(135deg, #e8d5a0, #c9a84c 40%, #fff4cc 60%, #c9a84c);
+            background: linear-gradient(135deg, #c4b5fd, var(--accent-gold) 40%, #ddd6fe 60%, var(--accent-gold));
             background-clip: text;
             text-shadow: none;
             margin-bottom: 6.4px;
@@ -299,8 +299,8 @@
             font-weight: 600;
             letter-spacing: 3.2px;
             text-transform: uppercase;
-            color: var(--space-deep);
-            background: linear-gradient(135deg, #e8d5a0, var(--accent-gold));
+            color: #ffffff;
+            background: linear-gradient(135deg, #8b5cf6, #4c1d95);
             border: none;
             border-radius: 3px;
             cursor: pointer;
@@ -358,7 +358,7 @@
             position: absolute;
             width: 40px;
             height: 40px;
-            border-color: #c9a84c;
+            border-color: #7c3aed;
             border-style: solid;
         }
 

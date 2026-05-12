@@ -20,9 +20,8 @@
 {{-- Stats --}}
 <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin-bottom:24px;">
     @foreach([
-        ['Pendientes',  $stats['pendientes'],  '#ffcc55', 'fa-regular fa-hourglass'],
-        ['En progreso', $stats['en_progreso'], '#88aaff', 'fa-regular fa-refresh'],
-        // todo -> Corregir icono
+        ['Pendientes',  $stats['pendientes'],  '#a78bfa', 'fa-regular fa-hourglass'],
+        ['En progreso', $stats['en_progreso'], '#88aaff', 'fa-solid fa-arrows-rotate'],
         ['Completadas', $stats['completadas'], '#4dcfcf', 'fa-regular fa-circle-check'],
     ] as [$label, $count, $color, $icon])
     <div class="panel" style="padding:20px 22px; display:flex; align-items:center; gap:16px;">
@@ -60,8 +59,8 @@
 
         @forelse($recentTasks as $task)
         @php
-            $statusColors = ['completada' => '#4dcfcf', 'en_progreso' => '#88aaff', 'pendiente' => '#ffcc55'];
-            $dotColor = $statusColors[$task->estado] ?? '#ffcc55';
+            $statusColors = ['completada' => '#4dcfcf', 'en_progreso' => '#88aaff', 'pendiente' => '#a78bfa'];
+            $dotColor = $statusColors[$task->estado] ?? '#a78bfa';
             $borderColor = $task->categoria->color_borde ?? $dotColor;
         @endphp
         <div style="padding:12px 20px; border-bottom:1px solid var(--border-subtle);
@@ -170,7 +169,7 @@
                 @foreach($upcomingTasks->take(3) as $task)
                 <div style="display:flex; align-items:center; gap:8px; margin-bottom:10px;">
                     <div style="width:3px; height:28px; border-radius:2px; flex-shrink:0;
-                                background:{{ $task->prioridad === 'alta' ? '#ff8866' : ($task->prioridad === 'media' ? '#ffcc55' : '#4dcfcf') }};"></div>
+                                background:{{ $task->prioridad === 'alta' ? '#ff8866' : ($task->prioridad === 'media' ? '#a78bfa' : '#4dcfcf') }};"></div>
                     <div>
                         <div style="font-size:13px; color:var(--star-white); line-height:1.3;">
                             {{ Str::limit($task->titulo, 24) }}
