@@ -441,11 +441,11 @@
                 <i class="fa-regular fa-folder-open"></i>
                 Categorías
             </a>
-            <a href="#" class="nav-link" style="cursor:default; pointer-events:none; opacity:0.45;">
+            <a href="{{ route('pomodoro.index') }}"
+                class="nav-link {{ request()->routeIs('pomodoro.*') ? 'active' : '' }}">
                 <i class="fa-regular fa-stopwatch"></i>
                 Pomodoro
             </a>
-            <?php // todo -> Corregir el icono ?>
         </nav>
 
         <div class="sidebar-user">
