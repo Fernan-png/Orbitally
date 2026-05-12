@@ -47,7 +47,7 @@
                 {{-- Eliminar (solo las personalizadas) --}}
                 @if(!($cat->es_predefinida ?? false))
                     <form method="POST" action="{{ route('categories.destroy', $cat->id) }}"
-                          onsubmit="return confirm('¿Eliminar esta categoría? Las tareas asociadas quedarán sin categoría.')">
+                          data-confirm="¿Eliminar esta categoría? Las tareas asociadas quedarán sin categoría.">
                         @csrf
                         @method('DELETE')
                         <button type="submit"

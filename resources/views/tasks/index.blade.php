@@ -2,6 +2,23 @@
 @section('title', 'Tareas')
 
 @section('content')
+<style>
+.status-select {
+    background-color: rgba(12, 10, 28, 0.55);
+    border-radius: 3px;
+    cursor: pointer;
+    font-family: 'Jost', sans-serif;
+    outline: none;
+    appearance: none;
+    -webkit-appearance: none;
+    transition: background 0.2s, border-color 0.25s, color 0.25s;
+}
+.status-select:hover { background-color: rgba(25, 20, 50, 0.75); }
+html.light .status-select { background-color: rgba(245, 242, 255, 0.9); }
+html.light .status-select:hover { background-color: rgba(233, 228, 255, 1); }
+.task-toggle { transition: border-color 0.25s, background 0.25s; }
+html.light .task-toggle:not(.is-done) { border-color: rgba(109,40,217,0.22) !important; }
+</style>
 <div class="page-header" style="display:flex; align-items:flex-end; justify-content:space-between; flex-wrap:wrap; gap:16px;">
     <div>
         <div class="page-title">Tareas</div>
@@ -34,7 +51,7 @@
         <a href="{{ route('tasks.index', array_merge(request()->except('categoria_id'), [])) }}"
            style="padding:4px 12px; border-radius:2px; font-size:12px; text-decoration:none;
                   border:1px solid {{ !request('categoria_id') ? 'var(--accent-gold)' : 'var(--border-subtle)' }};
-                  color:{{ !request('categoria_id') ? '#03060f' : 'var(--text-dim)' }};
+                  color:{{ !request('categoria_id') ? '#ffffff' : 'var(--text-dim)' }};
                   background:{{ !request('categoria_id') ? 'var(--accent-gold)' : 'transparent' }};
                   transition:all 0.2s;">
             Todas
@@ -69,9 +86,10 @@
             $statusColors = ['completada' => '#4dcfcf', 'en_progreso' => '#88aaff', 'pendiente' => '#a78bfa'];
             $borderColor = $task->categoria->color_borde ?? ($prioColors[$task->prioridad] ?? '#4dcfcf');
         @endphp
-        <div style="padding:14px 20px; border-bottom:1px solid var(--border-subtle); display:flex; align-items:center; gap:14px;
+        <div id="task-row-{{ $task->id }}"
+             style="padding:14px 20px; border-bottom:1px solid var(--border-subtle); display:flex; align-items:center; gap:14px;
                     opacity:{{ $task->estado === 'completada' ? '0.5' : '1' }};
-                    transition:opacity 0.2s, background 0.2s;"
+                    transition:opacity 0.3s, background 0.3s;"
              class="hover:bg-black/5 dark:hover:bg-white/5">
 
             {{-- Borde de prioridad/categoría --}}
@@ -79,36 +97,41 @@
                         box-shadow:0 0 8px {{ $borderColor }}44;"></div>
 
             {{-- Toggle completar --}}
-            <form method="POST" action="{{ route('tasks.toggle', $task->id) }}" style="flex-shrink:0;">
-                @csrf
-                @method('PATCH')
-                <button type="submit" title="Marcar como {{ $task->estado === 'completada' ? 'pendiente' : 'completada' }}"
-                        style="width:18px; height:18px; border-radius:50%; cursor:pointer; flex-shrink:0;
-                               border:1.5px solid {{ $task->estado === 'completada' ? '#4dcfcf' : 'rgba(255,255,255,0.18)' }};
-                               background:{{ $task->estado === 'completada' ? 'rgba(77,207,207,0.18)' : 'transparent' }};
-                               display:flex; align-items:center; justify-content:center;
-                               font-size:10px; color:#4dcfcf; transition:all 0.2s;">
-                    @if($task->estado === 'completada') ✓ @endif
-                </button>
-            </form>
+            <button class="task-toggle {{ $task->estado === 'completada' ? 'is-done' : '' }}"
+                    data-task-id="{{ $task->id }}"
+                    data-estado="{{ $task->estado }}"
+                    title="Marcar como {{ $task->estado === 'completada' ? 'pendiente' : 'completada' }}"
+                    style="width:18px; height:18px; border-radius:50%; cursor:pointer; flex-shrink:0;
+                           border:1.5px solid {{ $task->estado === 'completada' ? '#4dcfcf' : 'rgba(255,255,255,0.18)' }};
+                           background:{{ $task->estado === 'completada' ? 'rgba(77,207,207,0.18)' : 'transparent' }};
+                           display:flex; align-items:center; justify-content:center;
+                           font-size:10px; color:#4dcfcf;">
+                @if($task->estado === 'completada') ✓ @endif
+            </button>
 
             {{-- Info de la tarea --}}
             <div style="flex:1; min-width:0;">
-                <div style="font-size:14px;
+                <div class="task-title"
+                     style="font-size:14px;
                             font-weight:{{ $task->negrita ? '700' : '400' }};
                             font-style:{{ $task->cursiva ? 'italic' : 'normal' }};
                             color:var(--star-white);
                             text-decoration:{{ $task->estado === 'completada' ? 'line-through' : 'none' }};
-                            white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+                            white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+                            transition:text-decoration 0.2s, opacity 0.2s;">
                     {{ $task->emoji ? $task->emoji . ' ' : '' }}{{ $task->titulo }}
                 </div>
                 <div style="font-size:12px; color:var(--text-dim); margin-top:3px; display:flex; gap:14px; align-items:center; flex-wrap:wrap;">
-                    {{-- Badge estado --}}
+                    {{-- Badge estado (solo visual) --}}
                     <span style="display:inline-flex; align-items:center; gap:4px;">
-                        <span style="width:6px; height:6px; border-radius:50%;
+                        <span id="dot-{{ $task->id }}"
+                              style="width:6px; height:6px; border-radius:50%;
                                      background:{{ $statusColors[$task->estado] ?? '#a78bfa' }};
-                                     box-shadow:0 0 5px {{ $statusColors[$task->estado] ?? '#a78bfa' }}66;"></span>
-                        {{ ['pendiente' => 'Pendiente', 'en_progreso' => 'En progreso', 'completada' => 'Completada'][$task->estado] ?? $task->estado }}
+                                     box-shadow:0 0 5px {{ $statusColors[$task->estado] ?? '#a78bfa' }}66;
+                                     transition:background 0.25s, box-shadow 0.25s;"></span>
+                        <span id="status-label-{{ $task->id }}">
+                            {{ ['pendiente' => 'Pendiente', 'en_progreso' => 'En progreso', 'completada' => 'Completada'][$task->estado] ?? $task->estado }}
+                        </span>
                     </span>
                     @if($task->categoria)
                         <span style="color:{{ $task->categoria->color_borde }}; opacity:0.85;">
@@ -125,13 +148,27 @@
             </div>
 
             {{-- Acciones --}}
-            <div style="display:flex; gap:6px; flex-shrink:0;">
+            <div style="display:flex; gap:6px; flex-shrink:0; align-items:center;">
+                <div style="position:relative; display:inline-flex; align-items:center;">
+                    <select class="status-select" data-task-id="{{ $task->id }}"
+                            style="font-size:11px; letter-spacing:0.03em;
+                                   border:1px solid {{ $statusColors[$task->estado] }}55;
+                                   color:{{ $statusColors[$task->estado] }};
+                                   padding:5px 26px 5px 10px;">
+                        <option value="pendiente"   {{ $task->estado === 'pendiente'   ? 'selected' : '' }}>Pendiente</option>
+                        <option value="en_progreso" {{ $task->estado === 'en_progreso' ? 'selected' : '' }}>En progreso</option>
+                        <option value="completada"  {{ $task->estado === 'completada'  ? 'selected' : '' }}>Completada</option>
+                    </select>
+                    <i class="fa-solid fa-chevron-down"
+                       style="position:absolute; right:9px; font-size:7px;
+                              color:rgba(160,160,200,0.65); pointer-events:none;"></i>
+                </div>
                 <a href="{{ route('tasks.edit', $task->id) }}"
                    class="btn-secondary" style="padding:5px 12px; font-size:12px;">
                     Editar
                 </a>
                 <form method="POST" action="{{ route('tasks.destroy', $task->id) }}"
-                      onsubmit="return confirm('¿Eliminar esta tarea?')">
+                      data-confirm="¿Eliminar esta tarea? Esta acción no se puede deshacer.">
                     @csrf
                     @method('DELETE')
                     <button type="submit"
@@ -149,4 +186,87 @@
         @endforeach
     @endif
 </div>
+<script>
+    const STATUS_COLORS = { pendiente: '#a78bfa', en_progreso: '#88aaff', completada: '#4dcfcf' };
+    const STATUS_LABELS = { pendiente: 'Pendiente', en_progreso: 'En progreso', completada: 'Completada' };
+
+    // Actualiza visualmente una fila de tarea sin recargar la página
+    function updateTaskUI(taskId, newStatus) {
+        const color   = STATUS_COLORS[newStatus];
+        const isDone  = newStatus === 'completada';
+        const isLight = document.documentElement.classList.contains('light');
+
+        const row    = document.getElementById('task-row-' + taskId);
+        const dot    = document.getElementById('dot-' + taskId);
+        const label  = document.getElementById('status-label-' + taskId);
+        const title  = row.querySelector('.task-title');
+        const select = row.querySelector('.status-select');
+        const toggle = row.querySelector('.task-toggle');
+
+        // Actualizar select
+        select.value            = newStatus;
+        select.style.color      = color;
+        select.style.borderColor = color + '55';
+
+        // Actualizar indicador de estado
+        dot.style.background = color;
+        dot.style.boxShadow  = '0 0 5px ' + color + '66';
+        label.textContent    = STATUS_LABELS[newStatus];
+
+        // Actualizar fila y título
+        row.style.opacity             = isDone ? '0.5' : '1';
+        title.style.textDecoration    = isDone ? 'line-through' : 'none';
+
+        // Actualizar botón circular
+        toggle.dataset.estado    = newStatus;
+        toggle.innerHTML         = isDone ? '✓' : '';
+        toggle.title             = 'Marcar como ' + (isDone ? 'pendiente' : 'completada');
+        toggle.style.background  = isDone ? 'rgba(77,207,207,0.18)' : 'transparent';
+        toggle.style.borderColor = isDone ? '#4dcfcf' : (isLight ? 'rgba(109,40,217,0.22)' : 'rgba(255,255,255,0.18)');
+        toggle.classList.toggle('is-done', isDone);
+
+        // Flash de fondo
+        row.style.background = color + '12';
+        setTimeout(function() { row.style.background = ''; }, 420);
+    }
+
+    // Envía el cambio de estado al servidor
+    async function patchStatus(taskId, newStatus) {
+        try {
+            const response = await fetch('/tasks/' + taskId + '/status', {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': CSRF
+                },
+                body: JSON.stringify({ estado: newStatus })
+            });
+
+            if (!response.ok) throw new Error('Error al actualizar');
+
+            const toastType = newStatus === 'completada' ? 'success' : 'info';
+            showToast('Marcado como ' + STATUS_LABELS[newStatus], toastType);
+        } catch (error) {
+            location.reload();
+        }
+    }
+
+    // Cambiar estado desde el selector
+    document.querySelectorAll('.status-select').forEach(function(select) {
+        select.addEventListener('change', function() {
+            updateTaskUI(this.dataset.taskId, this.value);
+            patchStatus(this.dataset.taskId, this.value);
+        });
+    });
+
+    // Cambiar estado desde el botón circular
+    document.querySelectorAll('.task-toggle').forEach(function(button) {
+        button.addEventListener('click', function() {
+            const taskId    = this.dataset.taskId;
+            const newStatus = this.dataset.estado === 'completada' ? 'pendiente' : 'completada';
+            updateTaskUI(taskId, newStatus);
+            patchStatus(taskId, newStatus);
+        });
+    });
+</script>
 @endsection

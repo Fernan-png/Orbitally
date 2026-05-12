@@ -10,9 +10,9 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
-        // ══════════════════════════════════════════
+        // ---
         // USUARIOS DE PRUEBA
-        // ══════════════════════════════════════════
+        // ---
         $usuarios = [
             [
                 'id'             => 1,
@@ -37,9 +37,9 @@ class DatabaseSeeder extends Seeder
         ];
         DB::table('users')->insert($usuarios);
 
-        // ══════════════════════════════════════════
+        // ---
         // CATEGORÍAS PREDEFINIDAS (globales, usuario_id = NULL)
-        // ══════════════════════════════════════════
+        // ---
         $categoriasPredefinidas = [
             ['id' => 1, 'nombre' => 'Laboral',  'es_predefinida' => true, 'prioridad' => 1, 'color_borde' => '#4F9CF9', 'usuario_id' => null],
             ['id' => 2, 'nombre' => 'Estudios', 'es_predefinida' => true, 'prioridad' => 2, 'color_borde' => '#A78BFA', 'usuario_id' => null],
@@ -59,13 +59,13 @@ class DatabaseSeeder extends Seeder
             'created_at' => now(), 'updated_at' => now(),
         ]), array_merge($categoriasPredefinidas, $categoriasPersonalizadas)));
 
-        // ══════════════════════════════════════════
+        // ---
         // TAREAS - Usuario 1 (Fernando)
-        // ══════════════════════════════════════════
+        // ---
         $tareasF = [
             [
                 'titulo'       => 'Terminar migrations de Orbitally',
-                'descripcion'  => 'Rehacer los ficheros de migración según la tercera entrega del PFG eliminando etiquetas y tarea_etiqueta.',
+                'descripcion'  => 'Hay que repasar todos los ficheros de migración y limpiar las tablas que ya no se usan. Mejor hacerlo antes de que se acumule más.',
                 'emoji'        => '🛠️',
                 'color'        => '#1E293B',
                 'negrita'      => true,
@@ -79,7 +79,7 @@ class DatabaseSeeder extends Seeder
             ],
             [
                 'titulo'       => 'Implementar sistema de autenticación',
-                'descripcion'  => 'Configurar Laravel Breeze con registro, login y middleware de rutas protegidas.',
+                'descripcion'  => 'Todo lo del login y el registro. También proteger las rutas para que no entren sin cuenta.',
                 'emoji'        => '🔐',
                 'color'        => '#0F172A',
                 'negrita'      => true,
@@ -93,7 +93,7 @@ class DatabaseSeeder extends Seeder
             ],
             [
                 'titulo'       => 'Diseñar dashboard principal',
-                'descripcion'  => 'Maquetar con Blade y Tailwind CSS el panel principal con sidebar y secciones.',
+                'descripcion'  => 'Montar la pantalla principal con el menú lateral y los paneles de resumen. Que quede limpio y fácil de entender.',
                 'emoji'        => '🎨',
                 'color'        => '#1E293B',
                 'negrita'      => false,
@@ -107,7 +107,7 @@ class DatabaseSeeder extends Seeder
             ],
             [
                 'titulo'       => 'Integrar API de Groq',
-                'descripcion'  => 'Conectar el asistente de IA usando Guzzle desde el backend. La clave API nunca se expone al cliente.',
+                'descripcion'  => 'Conectar el chat con la IA para que los usuarios puedan pedir ayuda desde la propia app. Ojo con no exponer la clave en el frontend.',
                 'emoji'        => '🤖',
                 'color'        => '#312E81',
                 'negrita'      => false,
@@ -121,7 +121,7 @@ class DatabaseSeeder extends Seeder
             ],
             [
                 'titulo'       => 'Reunión con cliente web',
-                'descripcion'  => 'Presentar avance del proyecto freelance y revisar cambios en el diseño.',
+                'descripcion'  => 'Enseñarle al cliente cómo va la web y hablar de los cambios de diseño que pidió la semana pasada.',
                 'emoji'        => '💼',
                 'color'        => null,
                 'negrita'      => false,
@@ -153,7 +153,7 @@ class DatabaseSeeder extends Seeder
         $tareasD = [
             [
                 'titulo'       => 'Estudiar inglés B2 - Listening',
-                'descripcion'  => 'Practicar comprensión auditiva con ejercicios de Cambridge.',
+                'descripcion'  => 'Llevar un rato con auriculares haciendo ejercicios de escucha. Se me da fatal y necesito practicarlo más.',
                 'emoji'        => '🎧',
                 'color'        => '#0C4A6E',
                 'negrita'      => false,
@@ -167,7 +167,7 @@ class DatabaseSeeder extends Seeder
             ],
             [
                 'titulo'       => 'Rutina de cardio 30 min',
-                'descripcion'  => 'Salir a correr por el parque o usar la bicicleta estática.',
+                'descripcion'  => 'Por lo menos 30 minutos. Si llueve, la bici estática de casa y ya.',
                 'emoji'        => '🏃',
                 'color'        => '#14532D',
                 'negrita'      => false,
@@ -181,7 +181,7 @@ class DatabaseSeeder extends Seeder
             ],
             [
                 'titulo'       => 'Documentar entidades de la BD',
-                'descripcion'  => 'Completar la sección 4.2.2 del documento de entrega con las descripciones finales.',
+                'descripcion'  => 'Terminar de escribir cómo están organizadas las tablas. Me quedé a medias y hay que entregarlo pronto.',
                 'emoji'        => '📄',
                 'color'        => '#1E293B',
                 'negrita'      => true,
@@ -215,9 +215,9 @@ class DatabaseSeeder extends Seeder
 
         DB::table('tareas')->insert($todasTareas);
 
-        // ══════════════════════════════════════════
+        // ---
         // SESIONES POMODORO
-        // ══════════════════════════════════════════
+        // ---
         $sesiones = [
             // Fernando - completadas
             [
@@ -287,34 +287,34 @@ class DatabaseSeeder extends Seeder
             'created_at' => now(), 'updated_at' => now(),
         ]), $sesiones));
 
-        // ══════════════════════════════════════════
+        // ---
         // CHAT IA
-        // ══════════════════════════════════════════
+        // ---
         $chats = [
             [
-                'mensaje'    => '¿Cómo puedo organizar mis tareas del PFG para terminar a tiempo?',
-                'respuesta'  => 'Te recomiendo dividir el proyecto en bloques semanales. Empieza por las tareas marcadas como alta prioridad y asigna sesiones Pomodoro de 25 minutos a cada una. Para esta semana, prioriza "Terminar migrations" y "Diseñar dashboard" antes de avanzar con la integración de Groq.',
+                'mensaje'    => 'Tengo el proyecto del PFG encima y no sé ni por dónde empezar. ¿Cómo lo organizarías tú?',
+                'respuesta'  => 'Lo primero es listar todo lo que tienes pendiente sin filtrar nada. Luego separa lo que es bloqueante (si no lo haces, no puedes avanzar en lo demás) de lo que puede esperar. Empieza por las tareas de alta prioridad y trabaja en bloques de 25 minutos, uno a la vez. No intentes abarcar todo en un día.',
                 'usuario_id' => 1,
                 'created_at' => now()->subDays(1),
                 'updated_at' => now()->subDays(1),
             ],
             [
-                'mensaje'    => 'Tengo 3 horas libres esta tarde, ¿cómo las distribuyo?',
-                'respuesta'  => 'Con 3 horas puedes hacer 4 bloques Pomodoro de 25 min + descanso. Propongo: bloque 1-2 para "Implementar autenticación", bloque 3 para revisar el diseño del dashboard y bloque 4 para documentar lo avanzado. Deja los últimos 15 min para anotar pendientes del día siguiente.',
+                'mensaje'    => 'Tengo 3 horas libres esta tarde y quiero aprovecharlas bien. ¿Cómo las distribuyo?',
+                'respuesta'  => 'Con 3 horas tienes margen para 4 bloques de 25 minutos con sus descansos. Usa los dos primeros para lo que más te cueste o lo más urgente, el tercero para algo que lleves a medias, y el cuarto para repasar o documentar lo que hayas avanzado. Reserva los últimos 10 minutos para anotar qué queda pendiente mañana.',
                 'usuario_id' => 1,
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
-                'mensaje'    => 'Ayúdame a dividir la tarea "Integrar API de Groq" en pasos más pequeños.',
-                'respuesta'  => "Claro, aquí tienes los pasos: 1) Instalar Guzzle con composer. 2) Crear el GroqService en app/Services. 3) Añadir GROQ_API_KEY al .env. 4) Crear el controlador ChatIaController. 5) Definir la ruta POST /chat. 6) Conectar la vista Blade con fetch() al endpoint. 7) Probar con preguntas de prueba y controlar errores de la API.",
+                'mensaje'    => 'La tarea de integrar la IA me parece enorme y no avanzo. ¿Me ayudas a dividirla en pasos más manejables?',
+                'respuesta'  => "Claro. Cuando algo parece enorme es porque estás viendo el resultado final, no los pasos. Divídelo así: primero consigue que la petición llegue al servidor y devuelva algo, aunque sea un texto fijo. Luego conecta eso con la API real. Después pinta la respuesta en pantalla. Y al final pule los errores y los casos raros. Cuatro bloques en lugar de uno gigante.",
                 'usuario_id' => 1,
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
-                'mensaje'    => '¿Cuántas sesiones Pomodoro necesito para estudiar el temario de inglés B2?',
-                'respuesta'  => 'Depende del volumen de temario, pero para un B2 completo te recomiendo entre 3 y 4 sesiones diarias de 25 minutos. Distribuye: 1 sesión de listening, 1 de reading, 1 de gramática y 1 de vocabulario. En 4 semanas a este ritmo cubres un temario estándar con repaso.',
+                'mensaje'    => 'Llevo semanas intentando preparar el B2 de inglés y siento que no avanzo. ¿Por dónde empiezo?',
+                'respuesta'  => 'El problema más común es intentar trabajar todo a la vez. Elige una habilidad por sesión: un día listening, otro writing, otro gramática. 25 minutos de práctica enfocada vale más que una hora dando saltos entre temas. Si el examen está cerca, prioriza las partes donde más puntos puedes ganar, que suele ser reading y listening.',
                 'usuario_id' => 2,
                 'created_at' => now()->subDays(2),
                 'updated_at' => now()->subDays(2),

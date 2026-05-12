@@ -127,7 +127,7 @@
                 $today = now();
                 $taskDates = $upcomingTasks->pluck('fecha_fin')->filter()
                     ->map(fn($d) => \Carbon\Carbon::parse($d)->format('Y-m-d'))->toArray();
-                $firstDay = $today->copy()->startOfMonth()->dayOfWeek;
+                $firstDay = ($today->copy()->startOfMonth()->dayOfWeek + 6) % 7;
             @endphp
 
             <div style="font-size:12px; color:var(--text-dim); text-align:center; margin-bottom:10px; letter-spacing:0.05em;">
@@ -135,7 +135,7 @@
             </div>
 
             <div style="display:grid; grid-template-columns:repeat(7,1fr); text-align:center; margin-bottom:6px;">
-                @foreach(['D','L','M','X','J','V','S'] as $d)
+                @foreach(['L','M','X','J','V','S','D'] as $d)
                     <div style="font-size:10px; color:var(--text-muted); padding:2px 0;">{{ $d }}</div>
                 @endforeach
             </div>
@@ -151,7 +151,7 @@
                 <div style="padding:4px 2px; font-size:12px; border-radius:2px; position:relative;
                             font-weight:{{ $isToday ? '600' : '400' }};
                             background:{{ $isToday ? 'var(--accent-gold)' : 'transparent' }};
-                            color:{{ $isToday ? '#03060f' : ($hasTask ? 'var(--star-white)' : 'var(--text-muted)') }};">
+                            color:{{ $isToday ? '#ffffff' : ($hasTask ? 'var(--star-white)' : 'var(--text-muted)') }};">
                     {{ $day }}
                     @if($hasTask && !$isToday)
                         <span style="position:absolute; bottom:1px; left:50%; transform:translateX(-50%);

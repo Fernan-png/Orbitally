@@ -56,6 +56,41 @@ class PomodoroController extends Controller
     }
 
     /**
+     * Registra un ciclo de estudio completado en un solo paso.
+     */
+    public function logCycle(Request $request)
+    {
+        $data = $request->validate([
+            'duracion_estudio'  => 'required|integer|min:1|max:120',
+            'duracion_descanso' => 'required|integer|min:1|max:60',
+            'duracion_real'     => 'required|integer|min:0',
+            'tarea_id'          => 'nullable|exists:tareas,id',
+        ]);
+
+        if (!empty($data['tarea_id'])) {
+            $tarea = Tarea::with('categoria')->find($data['tarea_id']);
+            abort_if($tarea->usuario_id !== Auth::id(), 403);
+            $permitidas = Categoria::whereNull('usuario_id')
+                ->whereIn('nombre', ['Estudios', 'Laboral'])
+                ->pluck('id');
+            abort_if(!$permitidas->contains($tarea->categoria_id), 422);
+        }
+
+        Pomodoro::create([
+            'duracion_estudio'  => $data['duracion_estudio'],
+            'duracion_descanso' => $data['duracion_descanso'],
+            'duracion_real'     => $data['duracion_real'],
+            'inicio'            => Carbon::now()->subMinutes($data['duracion_real']),
+            'fin'               => Carbon::now(),
+            'estado'            => 'completada',
+            'tarea_id'          => $data['tarea_id'] ?? null,
+            'usuario_id'        => Auth::id(),
+        ]);
+
+        return response()->json(['ok' => true]);
+    }
+
+    /**
      * Guarda una nueva sesión Pomodoro cuando el usuario la inicia.
      */
     public function store(Request $request)

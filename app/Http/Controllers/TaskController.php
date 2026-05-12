@@ -56,7 +56,7 @@ class TaskController extends Controller
     public function edit(Tarea $task)
     {
         abort_if($task->usuario_id !== Auth::id(), 403);
-        $categorias = $this->categorias();
+        $categories = $this->categorias();
         return view('tasks.form', compact('task', 'categories'));
     }
 
@@ -72,6 +72,14 @@ class TaskController extends Controller
         ]));
 
         return redirect()->route('tasks.index')->with('success', 'Tarea actualizada.');
+    }
+
+    public function updateStatus(Request $request, Tarea $task)
+    {
+        abort_if($task->usuario_id !== Auth::id(), 403);
+        $data = $request->validate(['estado' => 'required|in:pendiente,en_progreso,completada']);
+        $task->update(['estado' => $data['estado']]);
+        return response()->json(['ok' => true]);
     }
 
     public function toggle(Tarea $task)

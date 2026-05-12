@@ -41,12 +41,14 @@ Route::middleware('auth')->group(function () {
     // Tasks (resourceful)
     Route::resource('tasks', TaskController::class)->except(['show']);
     Route::patch('/tasks/{task}/toggle', [TaskController::class, 'toggle'])->name('tasks.toggle');
+    Route::patch('/tasks/{task}/status', [TaskController::class, 'updateStatus'])->name('tasks.status');
 
     // Categories
     Route::resource('categories', CategoryController::class)->only(['index', 'store', 'destroy']);
 
     // Pomodoro
     Route::get('/pomodoro',                              [PomodoroController::class, 'index'])->name('pomodoro.index');
+    Route::post('/pomodoro/ciclo',                       [PomodoroController::class, 'logCycle'])->name('pomodoro.logCycle');
     Route::post('/pomodoro',                             [PomodoroController::class, 'store'])->name('pomodoro.store');
     Route::patch('/pomodoro/{sesion}/finish',            [PomodoroController::class, 'finish'])->name('pomodoro.finish');
     Route::delete('/pomodoro/historial',                 [PomodoroController::class, 'clearHistory'])->name('pomodoro.clearHistory');

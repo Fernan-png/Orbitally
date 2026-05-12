@@ -43,7 +43,7 @@ class DashboardController extends Controller
 
         // Fecha base del mes seleccionado
         $currentDate     = Carbon::createFromDate($year, $month, 1);
-        $firstDayOfWeek  = $currentDate->dayOfWeek; // 0 = Domingo
+        $firstDayOfWeek  = ($currentDate->dayOfWeek + 6) % 7; // 0 = Lunes
         $daysInMonth     = $currentDate->daysInMonth;
 
         // Meses anterior y siguiente para la navegación

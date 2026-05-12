@@ -28,7 +28,7 @@
 
         {{-- Cabecera días --}}
         <div style="display:grid; grid-template-columns:repeat(7,1fr); border-bottom:1px solid var(--border-subtle);">
-            @foreach(['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'] as $dayName)
+            @foreach(['Lun','Mar','Mié','Jue','Vie','Sáb','Dom'] as $dayName)
             <div style="padding:10px 6px; text-align:center; font-size:10px; letter-spacing:0.1em;
                         text-transform:uppercase; color:var(--text-dim);">
                 {{ $dayName }}

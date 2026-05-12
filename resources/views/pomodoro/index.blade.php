@@ -373,15 +373,11 @@
             @forelse($historial as $sesion)
             @php
                 $isComp = $sesion->estado === 'completada';
-                $color  = $isComp
-                    ? '#4dcfcf'
-                    : ($sesion->estado === 'activa' ? '#88aaff' : 'rgba(255,100,80,0.55)');
-                $icon   = $isComp
-                    ? 'fa-circle-check'
-                    : ($sesion->estado === 'activa' ? 'fa-rotate' : 'fa-circle-xmark');
+                $color  = $isComp ? '#4dcfcf' : 'rgba(255,100,80,0.55)';
+                $icon   = $isComp ? 'fa-circle-check' : 'fa-circle-xmark';
             @endphp
             <div class="historial-row">
-                <i class="{{ $isComp || $sesion->estado === 'cancelada' ? 'fa-regular' : 'fa-solid' }} {{ $icon }}" style="color:{{ $color }}; font-size:14px; flex-shrink:0;"></i>
+                <i class="fa-regular {{ $icon }}" style="color:{{ $color }}; font-size:14px; flex-shrink:0;"></i>
                 <div style="flex:1; min-width:0;">
                     <div style="font-size:13px; color:var(--star-white);">
                         {{ $sesion->duracion_estudio }}m / {{ $sesion->duracion_descanso }}m
@@ -412,13 +408,9 @@
 
 @push('scripts')
 <script>
-(function () {
-    'use strict';
-
-    const CSRF          = document.querySelector('meta[name="csrf-token"]').content;
     const CIRCUMFERENCE = 2 * Math.PI * 104;
 
-    /* ── DOM ─────────────────────────────────────────── */
+    // Referencias al DOM
     const timerDisplay    = document.getElementById('timer-display');
     const phaseBadge      = document.getElementById('phase-badge');
     const cycleInfo       = document.getElementById('cycle-info');
@@ -435,11 +427,9 @@
     const phaseFlash      = document.getElementById('phase-flash');
     const studyError      = document.getElementById('study-error');
     const breakError      = document.getElementById('break-error');
-    const historialList   = document.getElementById('historial-list');
 
-    /* ── State ───────────────────────────────────────── */
+    // Estado del temporizador
     let intervalId   = null;
-    let sesionId     = null;
     let secondsLeft  = 0;
     let totalSeconds = 0;
     let isStudy      = true;
@@ -448,287 +438,166 @@
     let sessionStart = null;
     let isTransition = false;
 
-    /* ── Helpers ─────────────────────────────────────── */
-    const pad = n => String(n).padStart(2, '0');
-    const fmt = s => `${pad(Math.floor(s / 60))}:${pad(s % 60)}`;
+    // Convierte segundos a formato MM:SS
+    function formatTime(seconds) {
+        const mins = Math.floor(seconds / 60);
+        const secs = seconds % 60;
+        return String(mins).padStart(2, '0') + ':' + String(secs).padStart(2, '0');
+    }
 
+    // Actualiza el anillo SVG y el color del timer
     function setRing(remaining, total, color) {
         const offset = CIRCUMFERENCE * (1 - remaining / total);
         ringArc.style.strokeDashoffset = offset;
-        ringArc.style.stroke = color;
-        timerDisplay.style.color = color;
+        ringArc.style.stroke           = color;
+        timerDisplay.style.color       = color;
     }
 
+    // Cambia el aspecto del badge y el anillo según la fase
     function setPhaseUI(study) {
-        const color = study ? '#4dcfcf' : '#88aaff';
-        phaseBadge.textContent      = study ? 'Estudio' : 'Descanso';
-        phaseBadge.style.background = study ? 'rgba(77,207,207,0.1)'  : 'rgba(136,170,255,0.1)';
-        phaseBadge.style.border     = `1px solid ${study ? 'rgba(77,207,207,0.22)' : 'rgba(136,170,255,0.22)'}`;
-        phaseBadge.style.color      = color;
-        ringWrapper.classList.remove('ring-glow-study', 'ring-glow-break');
-        ringWrapper.classList.add(study ? 'ring-glow-study' : 'ring-glow-break');
+        if (study) {
+            phaseBadge.textContent      = 'Estudio';
+            phaseBadge.style.color      = '#4dcfcf';
+            phaseBadge.style.background = 'rgba(77,207,207,0.1)';
+            phaseBadge.style.border     = '1px solid rgba(77,207,207,0.22)';
+            ringWrapper.classList.remove('ring-glow-break');
+            ringWrapper.classList.add('ring-glow-study');
+        } else {
+            phaseBadge.textContent      = 'Descanso';
+            phaseBadge.style.color      = '#88aaff';
+            phaseBadge.style.background = 'rgba(136,170,255,0.1)';
+            phaseBadge.style.border     = '1px solid rgba(136,170,255,0.22)';
+            ringWrapper.classList.remove('ring-glow-study');
+            ringWrapper.classList.add('ring-glow-break');
+        }
     }
 
+    // Flash de pantalla al cambiar de fase
     function flashPhase(study) {
         phaseFlash.style.background = study ? 'rgba(77,207,207,0.10)' : 'rgba(136,170,255,0.10)';
         phaseFlash.style.opacity    = '1';
-        setTimeout(() => { phaseFlash.style.opacity = '0'; }, 500);
+        setTimeout(function() { phaseFlash.style.opacity = '0'; }, 500);
     }
 
+    // Actualiza el título de la pestaña del navegador
     function updateTitle(secs) {
-        document.title = `${isStudy ? '🔴' : '🟢'} ${fmt(secs)} — Orbitally`;
+        const emoji = isStudy ? '🔴' : '🟢';
+        document.title = emoji + ' ' + formatTime(secs) + ' · Orbitally';
     }
 
-    /* ── Validación ──────────────────────────────────── */
+    // Comprueba si el valor tiene decimales
     function hasDecimal(val) {
         return /[.,]/.test(String(val));
     }
 
-    function showErr(el, msg) {
-        el.textContent = msg;
+    function showError(el, msg) {
+        el.textContent   = msg;
         el.style.opacity = '1';
     }
 
-    function clearErr(el) {
+    function clearError(el) {
         el.style.opacity = '0';
     }
 
+    // Valida que los inputs no tengan decimales
     function validateInputs() {
         let valid = true;
         if (hasDecimal(studyInput.value)) {
-            showErr(studyError, 'Usa solo números enteros');
+            showError(studyError, 'Usa solo números enteros');
             valid = false;
         } else {
-            clearErr(studyError);
+            clearError(studyError);
         }
         if (hasDecimal(breakInput.value)) {
-            showErr(breakError, 'Usa solo números enteros');
+            showError(breakError, 'Usa solo números enteros');
             valid = false;
         } else {
-            clearErr(breakError);
+            clearError(breakError);
         }
         return valid;
     }
 
-    /* ── Lock / unlock config ────────────────────────── */
+    // Bloquea o desbloquea los controles de configuración
     function lockConfig(lock) {
         studyInput.disabled = lock;
         breakInput.disabled = lock;
         taskSelect.disabled = lock;
-        document.querySelectorAll('.adj-btn, .preset-btn').forEach(b => b.disabled = lock);
+        document.querySelectorAll('.adj-btn, .preset-btn').forEach(function(btn) {
+            btn.disabled = lock;
+        });
     }
 
-    /* ── API ─────────────────────────────────────────── */
-    async function apiPost(url, body) {
-        const r = await fetch(url, {
+    // Guarda un ciclo completado en el servidor
+    async function logCompletedCycle(minutosReales) {
+        await fetch('{{ route("pomodoro.logCycle") }}', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': CSRF },
-            body: JSON.stringify(body),
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': CSRF
+            },
+            body: JSON.stringify({
+                duracion_estudio:  parseInt(studyInput.value, 10),
+                duracion_descanso: parseInt(breakInput.value, 10),
+                duracion_real:     minutosReales,
+                tarea_id:          taskSelect.value || null
+            })
         });
-        return r.json();
     }
 
-    async function apiPatch(url, body) {
-        const r = await fetch(url, {
-            method: 'PATCH',
-            headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': CSRF },
-            body: JSON.stringify(body),
-        });
-        return r.json();
-    }
-
-    /* ── Timer ───────────────────────────────────────── */
+    // Se ejecuta cada segundo mientras el timer está activo
     function tick() {
         if (isPaused) return;
         secondsLeft--;
-        timerDisplay.textContent = fmt(secondsLeft);
+        timerDisplay.textContent = formatTime(secondsLeft);
         setRing(secondsLeft, totalSeconds, isStudy ? '#4dcfcf' : '#88aaff');
         updateTitle(secondsLeft);
         if (secondsLeft <= 0) phaseEnd();
     }
 
+    // Maneja el cambio de fase (estudio → descanso → estudio)
     function phaseEnd() {
         clearInterval(intervalId);
         intervalId = null;
 
         if (isStudy) {
-            finishSession('completada', parseInt(studyInput.value, 10));
+            logCompletedCycle(parseInt(studyInput.value, 10));
             isStudy      = false;
             totalSeconds = parseInt(breakInput.value, 10) * 60;
             secondsLeft  = totalSeconds;
             flashPhase(false);
             setPhaseUI(false);
-            timerDisplay.textContent = fmt(secondsLeft);
+            timerDisplay.textContent = formatTime(secondsLeft);
             setRing(secondsLeft, totalSeconds, '#88aaff');
-            intervalId = setInterval(tick, 1000);
         } else {
             cycleCount++;
-            cycleInfo.textContent = `Ciclo ${cycleCount}`;
+            cycleInfo.textContent = 'Ciclo ' + cycleCount;
             isStudy      = true;
             totalSeconds = parseInt(studyInput.value, 10) * 60;
             secondsLeft  = totalSeconds;
+            sessionStart = Date.now();
             flashPhase(true);
             setPhaseUI(true);
-            timerDisplay.textContent = fmt(secondsLeft);
+            timerDisplay.textContent = formatTime(secondsLeft);
             setRing(secondsLeft, totalSeconds, '#4dcfcf');
-            startNewStudy();
         }
+
+        intervalId = setInterval(tick, 1000);
     }
 
-    async function startNewStudy() {
-        const data = await apiPost('{{ route("pomodoro.store") }}', {
-            duracion_estudio:  parseInt(studyInput.value, 10),
-            duracion_descanso: parseInt(breakInput.value, 10),
-            tarea_id:          taskSelect.value || null,
-        });
-        sesionId     = data.id;
-        sessionStart = Date.now();
-        intervalId   = setInterval(tick, 1000);
-    }
-
-    async function finishSession(estado, duracion_real) {
-        if (!sesionId) return;
-        await apiPatch(`/pomodoro/${sesionId}/finish`, { estado, duracion_real });
-        sesionId = null;
-    }
-
-    /* ── Botones ─────────────────────────────────────── */
-    btnStart.addEventListener('click', async () => {
-        if (isPaused) {
-            isPaused = false;
-            btnStart.innerHTML = '<i class="fa-solid fa-play"></i> Iniciar';
-            btnStart.disabled  = true;
-            btnPause.disabled  = false;
-            btnPause.innerHTML = '<i class="fa-solid fa-pause"></i> Pausar';
-            btnSkip.disabled   = false;
-            intervalId = setInterval(tick, 1000);
-            return;
-        }
-
-        if (!validateInputs()) return;
-
-        isStudy    = true;
-        cycleCount = 1;
-        cycleInfo.textContent = 'Ciclo 1';
-        totalSeconds = parseInt(studyInput.value, 10) * 60;
-        secondsLeft  = totalSeconds;
-
-        setPhaseUI(true);
-        timerDisplay.textContent = fmt(secondsLeft);
-        setRing(secondsLeft, totalSeconds, '#4dcfcf');
-        lockConfig(true);
-
-        btnStart.disabled  = true;
-        btnPause.disabled  = false;
-        btnSkip.disabled   = false;
-        btnCancel.disabled = false;
-
-        const data = await apiPost('{{ route("pomodoro.store") }}', {
-            duracion_estudio:  parseInt(studyInput.value, 10),
-            duracion_descanso: parseInt(breakInput.value, 10),
-            tarea_id:          taskSelect.value || null,
-        });
-        sesionId     = data.id;
-        sessionStart = Date.now();
-        intervalId   = setInterval(tick, 1000);
-    });
-
-    btnPause.addEventListener('click', () => {
-        isPaused = true;
-        clearInterval(intervalId);
-        intervalId = null;
-
-        btnPause.disabled  = true;
-        btnStart.disabled  = false;
-        btnStart.innerHTML = '<i class="fa-solid fa-play"></i> Reanudar';
-    });
-
-    btnSkip.addEventListener('click', async () => {
-        if (isTransition) return;
-        isTransition = true;
-
-        clearInterval(intervalId);
-        intervalId = null;
-        isPaused   = false;
-
-        if (isStudy) {
-            if (sesionId) {
-                const elapsed = Math.round((Date.now() - sessionStart) / 60000);
-                await finishSession('completada', Math.max(1, elapsed));
-            }
-            isStudy      = false;
-            totalSeconds = parseInt(breakInput.value, 10) * 60;
-            secondsLeft  = totalSeconds;
-            flashPhase(false);
-            setPhaseUI(false);
-            timerDisplay.textContent = fmt(secondsLeft);
-            setRing(secondsLeft, totalSeconds, '#88aaff');
-            updateTitle(secondsLeft);
-            btnPause.disabled  = false;
-            btnPause.innerHTML = '<i class="fa-solid fa-pause"></i> Pausar';
-            btnStart.disabled  = true;
-            intervalId = setInterval(tick, 1000);
-        } else {
-            cycleCount++;
-            cycleInfo.textContent = `Ciclo ${cycleCount}`;
-            isStudy      = true;
-            totalSeconds = parseInt(studyInput.value, 10) * 60;
-            secondsLeft  = totalSeconds;
-            flashPhase(true);
-            setPhaseUI(true);
-            timerDisplay.textContent = fmt(secondsLeft);
-            setRing(secondsLeft, totalSeconds, '#4dcfcf');
-            updateTitle(secondsLeft);
-            btnPause.disabled  = false;
-            btnPause.innerHTML = '<i class="fa-solid fa-pause"></i> Pausar';
-            btnStart.disabled  = true;
-            await startNewStudy();
-        }
-
-        isTransition = false;
-    });
-
-    btnCancel.addEventListener('click', async () => {
-        if (!confirm('¿Cancelar la sesión actual?')) return;
-        clearInterval(intervalId);
-        intervalId = null;
-
-        if (sesionId && isStudy) {
-            const elapsed = Math.round((Date.now() - sessionStart) / 60000);
-            await finishSession('cancelada', elapsed);
-        } else if (sesionId) {
-            await finishSession('cancelada', 0);
-        }
-
-        document.title = 'Orbitally — Pomodoro';
-        resetUI();
-        location.reload();
-    });
-
-    btnClearHistory.addEventListener('click', async () => {
-        if (!confirm('¿Borrar todo el historial de sesiones? Esta acción no se puede deshacer.')) return;
-        const r = await fetch('{{ route("pomodoro.clearHistory") }}', {
-            method: 'DELETE',
-            headers: { 'X-CSRF-TOKEN': CSRF },
-        });
-        if (r.ok) location.reload();
-    });
-
+    // Resetea la interfaz al estado inicial
     function resetUI() {
         clearInterval(intervalId);
         intervalId   = null;
         isPaused     = false;
-        sesionId     = null;
         isStudy      = true;
         cycleCount   = 1;
         isTransition = false;
         cycleInfo.textContent = 'Ciclo 1';
 
-        const studyMins = parseInt(studyInput.value, 10);
-        totalSeconds    = studyMins * 60;
-        secondsLeft     = totalSeconds;
+        totalSeconds = parseInt(studyInput.value, 10) * 60;
+        secondsLeft  = totalSeconds;
 
-        timerDisplay.textContent = fmt(secondsLeft);
+        timerDisplay.textContent = formatTime(secondsLeft);
         setRing(secondsLeft, totalSeconds, '#4dcfcf');
         setPhaseUI(true);
         ringWrapper.classList.remove('ring-glow-study', 'ring-glow-break');
@@ -742,65 +611,167 @@
         lockConfig(false);
     }
 
-    /* ── Ajustes de tiempo ───────────────────────────── */
-    window.adjustTime = function (type, delta) {
+    // Botón Iniciar / Reanudar
+    btnStart.addEventListener('click', function() {
+        if (isPaused) {
+            isPaused           = false;
+            btnStart.disabled  = true;
+            btnStart.innerHTML = '<i class="fa-solid fa-play"></i> Iniciar';
+            btnPause.disabled  = false;
+            btnPause.innerHTML = '<i class="fa-solid fa-pause"></i> Pausar';
+            btnSkip.disabled   = false;
+            intervalId         = setInterval(tick, 1000);
+            return;
+        }
+
+        if (!validateInputs()) return;
+
+        isStudy               = true;
+        cycleCount            = 1;
+        cycleInfo.textContent = 'Ciclo 1';
+        totalSeconds          = parseInt(studyInput.value, 10) * 60;
+        secondsLeft           = totalSeconds;
+
+        setPhaseUI(true);
+        timerDisplay.textContent = formatTime(secondsLeft);
+        setRing(secondsLeft, totalSeconds, '#4dcfcf');
+        lockConfig(true);
+
+        btnStart.disabled  = true;
+        btnPause.disabled  = false;
+        btnSkip.disabled   = false;
+        btnCancel.disabled = false;
+
+        sessionStart = Date.now();
+        intervalId   = setInterval(tick, 1000);
+    });
+
+    // Botón Pausar
+    btnPause.addEventListener('click', function() {
+        isPaused = true;
+        clearInterval(intervalId);
+        intervalId = null;
+
+        btnPause.disabled  = true;
+        btnStart.disabled  = false;
+        btnStart.innerHTML = '<i class="fa-solid fa-play"></i> Reanudar';
+    });
+
+    // Botón Saltar fase
+    btnSkip.addEventListener('click', async function() {
+        if (isTransition) return;
+        isTransition = true;
+
+        clearInterval(intervalId);
+        intervalId = null;
+        isPaused   = false;
+
+        if (isStudy) {
+            const elapsed = Math.max(1, Math.round((Date.now() - sessionStart) / 60000));
+            await logCompletedCycle(elapsed);
+            isStudy      = false;
+            totalSeconds = parseInt(breakInput.value, 10) * 60;
+            secondsLeft  = totalSeconds;
+            flashPhase(false);
+            setPhaseUI(false);
+            timerDisplay.textContent = formatTime(secondsLeft);
+            setRing(secondsLeft, totalSeconds, '#88aaff');
+        } else {
+            cycleCount++;
+            cycleInfo.textContent = 'Ciclo ' + cycleCount;
+            isStudy      = true;
+            totalSeconds = parseInt(studyInput.value, 10) * 60;
+            secondsLeft  = totalSeconds;
+            sessionStart = Date.now();
+            flashPhase(true);
+            setPhaseUI(true);
+            timerDisplay.textContent = formatTime(secondsLeft);
+            setRing(secondsLeft, totalSeconds, '#4dcfcf');
+        }
+
+        updateTitle(secondsLeft);
+        btnPause.disabled  = false;
+        btnPause.innerHTML = '<i class="fa-solid fa-pause"></i> Pausar';
+        btnStart.disabled  = true;
+        intervalId         = setInterval(tick, 1000);
+        isTransition       = false;
+    });
+
+    // Botón Cancelar
+    btnCancel.addEventListener('click', function() {
+        if (!confirm('¿Cancelar la sesión actual?')) return;
+        document.title = 'Orbitally · Pomodoro';
+        resetUI();
+    });
+
+    // Borrar historial
+    btnClearHistory.addEventListener('click', async function() {
+        if (!confirm('¿Borrar todo el historial? Esta acción no se puede deshacer.')) return;
+        const response = await fetch('{{ route("pomodoro.clearHistory") }}', {
+            method: 'DELETE',
+            headers: { 'X-CSRF-TOKEN': CSRF }
+        });
+        if (response.ok) location.reload();
+    });
+
+    // Ajustar tiempo con los botones + / -
+    window.adjustTime = function(type, delta) {
         if (studyInput.disabled) return;
         if (type === 'study') {
-            const val = Math.min(120, Math.max(1, parseInt(studyInput.value || 25) + delta));
-            studyInput.value = val;
-            clearErr(studyError);
+            const newVal = Math.min(120, Math.max(1, parseInt(studyInput.value || 25) + delta));
+            studyInput.value = newVal;
+            clearError(studyError);
             if (!intervalId && isStudy) {
-                totalSeconds = val * 60;
-                secondsLeft  = totalSeconds;
-                timerDisplay.textContent = fmt(secondsLeft);
+                totalSeconds             = newVal * 60;
+                secondsLeft              = totalSeconds;
+                timerDisplay.textContent = formatTime(secondsLeft);
                 setRing(secondsLeft, totalSeconds, '#4dcfcf');
             }
         } else {
             breakInput.value = Math.min(60, Math.max(1, parseInt(breakInput.value || 5) + delta));
-            clearErr(breakError);
+            clearError(breakError);
         }
     };
 
-    window.applyPreset = function (study, brk) {
+    // Aplicar preset de tiempos
+    window.applyPreset = function(study, brk) {
         if (studyInput.disabled) return;
         studyInput.value = study;
         breakInput.value = brk;
-        clearErr(studyError);
-        clearErr(breakError);
-        totalSeconds = study * 60;
-        secondsLeft  = totalSeconds;
-        timerDisplay.textContent = fmt(secondsLeft);
+        clearError(studyError);
+        clearError(breakError);
+        totalSeconds             = study * 60;
+        secondsLeft              = totalSeconds;
+        timerDisplay.textContent = formatTime(secondsLeft);
         setRing(secondsLeft, totalSeconds, '#4dcfcf');
     };
 
-    /* ── Listeners de inputs ─────────────────────────── */
-    studyInput.addEventListener('input', () => {
+    // Actualizar timer en tiempo real al escribir en el input de estudio
+    studyInput.addEventListener('input', function() {
         if (intervalId || isPaused) return;
         if (hasDecimal(studyInput.value)) {
-            showErr(studyError, 'Usa solo números enteros');
+            showError(studyError, 'Usa solo números enteros');
             return;
         }
-        clearErr(studyError);
-        const val = Math.max(1, Math.min(120, parseInt(studyInput.value) || 25));
-        totalSeconds = val * 60;
-        secondsLeft  = totalSeconds;
-        timerDisplay.textContent = fmt(secondsLeft);
+        clearError(studyError);
+        const val            = Math.max(1, Math.min(120, parseInt(studyInput.value) || 25));
+        totalSeconds         = val * 60;
+        secondsLeft          = totalSeconds;
+        timerDisplay.textContent = formatTime(secondsLeft);
         setRing(secondsLeft, totalSeconds, '#4dcfcf');
     });
 
-    breakInput.addEventListener('input', () => {
+    breakInput.addEventListener('input', function() {
         if (hasDecimal(breakInput.value)) {
-            showErr(breakError, 'Usa solo números enteros');
+            showError(breakError, 'Usa solo números enteros');
         } else {
-            clearErr(breakError);
+            clearError(breakError);
         }
     });
 
-    /* ── Init ────────────────────────────────────────── */
+    // Inicialización
     ringArc.style.strokeDasharray  = CIRCUMFERENCE;
     ringArc.style.strokeDashoffset = 0;
-    timerDisplay.textContent = fmt(parseInt(studyInput.value, 10) * 60);
-
-})();
+    timerDisplay.textContent       = formatTime(parseInt(studyInput.value, 10) * 60);
 </script>
 @endpush
