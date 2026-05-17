@@ -7,6 +7,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\TaskController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\PomodoroController;
+use App\Http\Controllers\AiAssistantController;
 
 // --- Public -------------------------------------
 Route::get('/', fn() => view('welcome'))->name('welcome');
@@ -45,6 +46,9 @@ Route::middleware('auth')->group(function () {
 
     // Categories
     Route::resource('categories', CategoryController::class)->only(['index', 'store', 'destroy']);
+
+    // AI Assistant
+    Route::post('/assistant/chat', [AiAssistantController::class, 'chat'])->name('assistant.chat');
 
     // Pomodoro
     Route::get('/pomodoro',                              [PomodoroController::class, 'index'])->name('pomodoro.index');

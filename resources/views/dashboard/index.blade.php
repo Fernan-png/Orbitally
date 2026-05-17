@@ -4,7 +4,7 @@
 @section('content')
 
 {{-- Encabezado --}}
-<div class="page-header" style="display:flex; align-items:flex-end; justify-content:space-between; flex-wrap:wrap; gap:16px;">
+<div class="page-header-row">
     <div>
         <div class="page-title">Panel de Control</div>
         <div class="page-subtitle">

@@ -50,15 +50,7 @@
                           data-confirm="¿Eliminar esta categoría? Las tareas asociadas quedarán sin categoría.">
                         @csrf
                         @method('DELETE')
-                        <button type="submit"
-                                style="padding:5px 12px; font-family:'Jost',sans-serif; font-size:12px;
-                                       color:rgba(255,100,80,0.6); background:rgba(255,100,80,0.05);
-                                       border:1px solid rgba(255,100,80,0.14); border-radius:3px; cursor:pointer;
-                                       transition:all 0.2s;"
-                                onmouseover="this.style.color='#ff6644'; this.style.background='rgba(255,100,80,0.1)';"
-                                onmouseout="this.style.color='rgba(255,100,80,0.6)'; this.style.background='rgba(255,100,80,0.05)';">
-                            Eliminar
-                        </button>
+                        <button type="submit" class="btn-danger">Eliminar</button>
                     </form>
                 @else
                     <span style="font-size:11px; color:var(--text-muted); padding:5px 12px;">—</span>

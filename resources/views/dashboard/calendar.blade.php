@@ -4,7 +4,7 @@
 @section('content')
 
 {{-- Encabezado --}}
-<div class="page-header" style="display:flex; align-items:flex-end; justify-content:space-between; flex-wrap:wrap; gap:16px;">
+<div class="page-header-row">
     <div>
         <div class="page-title">Calendario</div>
         <div class="page-subtitle">Vista mensual de tus tareas</div>
@@ -29,10 +29,7 @@
         {{-- Cabecera días --}}
         <div style="display:grid; grid-template-columns:repeat(7,1fr); border-bottom:1px solid var(--border-subtle);">
             @foreach(['Lun','Mar','Mié','Jue','Vie','Sáb','Dom'] as $dayName)
-            <div style="padding:10px 6px; text-align:center; font-size:10px; letter-spacing:0.1em;
-                        text-transform:uppercase; color:var(--text-dim);">
-                {{ $dayName }}
-            </div>
+                <div class="cal-day-header">{{ $dayName }}</div>
             @endforeach
         </div>
 

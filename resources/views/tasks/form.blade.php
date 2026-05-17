@@ -3,14 +3,7 @@
 
 @section('content')
 <div class="page-header">
-    <a href="{{ route('tasks.index') }}"
-       style="font-size:12px; color:var(--text-dim); text-decoration:none;
-              display:inline-flex; align-items:center; gap:5px; margin-bottom:12px;
-              transition:color 0.2s;"
-       onmouseover="this.style.color='var(--star-white)'"
-       onmouseout="this.style.color='var(--text-dim)'">
-        ← Volver a tareas
-    </a>
+    <a href="{{ route('tasks.index') }}" class="back-link-nav">← Volver a tareas</a>
     <div class="page-title">{{ isset($task) ? 'Editar tarea' : 'Nueva tarea' }}</div>
 </div>
 
@@ -28,25 +21,22 @@
         @csrf
         @if(isset($task)) @method('PUT') @endif
 
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:18px;">
+        <div class="form-grid">
 
-            {{-- Título --}}
-            <div style="grid-column:span 2;">
+            <div class="form-grid-full">
                 <label class="form-label" for="titulo">Título *</label>
                 <input type="text" id="titulo" name="titulo" class="form-input"
                        placeholder="Nombre de la tarea"
                        value="{{ old('titulo', $task->titulo ?? '') }}" required>
             </div>
 
-            {{-- Descripción --}}
-            <div style="grid-column:span 2;">
+            <div class="form-grid-full">
                 <label class="form-label" for="descripcion">Descripción</label>
                 <textarea id="descripcion" name="descripcion" class="form-input" rows="3"
                           placeholder="Descripción opcional..."
                           style="resize:vertical; line-height:1.5;">{{ old('descripcion', $task->descripcion ?? '') }}</textarea>
             </div>
 
-            {{-- Categoría --}}
             <div>
                 <label class="form-label" for="categoria_id">Categoría</label>
                 <select id="categoria_id" name="categoria_id" class="form-input">
@@ -60,7 +50,6 @@
                 </select>
             </div>
 
-            {{-- Prioridad --}}
             <div>
                 <label class="form-label" for="prioridad">Prioridad</label>
                 <select id="prioridad" name="prioridad" class="form-input">
@@ -70,7 +59,6 @@
                 </select>
             </div>
 
-            {{-- Estado (solo en edición) --}}
             @if(isset($task))
             <div>
                 <label class="form-label" for="estado">Estado</label>
@@ -82,7 +70,6 @@
             </div>
             @endif
 
-            {{-- Fecha --}}
             <div>
                 <label class="form-label" for="fecha_fin">Fecha de vencimiento</label>
                 <input type="date" id="fecha_fin" name="fecha_fin" class="form-input"
@@ -90,7 +77,6 @@
                            ? \Carbon\Carbon::parse($task->fecha_fin)->format('Y-m-d') : '') }}">
             </div>
 
-            {{-- Emoji --}}
             <div>
                 <label class="form-label" for="emoji">Emoji (opcional)</label>
                 <input type="text" id="emoji" name="emoji" class="form-input"
@@ -101,32 +87,23 @@
 
         </div>
 
-        {{-- Opciones visuales --}}
-        <div style="margin-top:22px; padding-top:22px; border-top:1px solid var(--border-subtle);">
-            <div style="font-size:11px; letter-spacing:0.12em; text-transform:uppercase;
-                        color:var(--text-dim); margin-bottom:14px;">
-                Opciones visuales
-            </div>
-            <div style="display:flex; gap:28px; align-items:center;">
-                <label style="display:flex; align-items:center; gap:8px; cursor:pointer;
-                              font-size:13px; color:var(--text-dim);">
+        <div class="form-section">
+            <div class="form-section-label">Opciones visuales</div>
+            <div class="form-checkbox-row">
+                <label class="form-checkbox-label">
                     <input type="checkbox" name="negrita" value="1"
-                           {{ old('negrita', $task->negrita ?? false) ? 'checked' : '' }}
-                           style="accent-color:var(--accent-gold); width:14px; height:14px;">
+                           {{ old('negrita', $task->negrita ?? false) ? 'checked' : '' }}>
                     <strong style="color:var(--star-white);">Negrita</strong>
                 </label>
-                <label style="display:flex; align-items:center; gap:8px; cursor:pointer;
-                              font-size:13px; color:var(--text-dim);">
+                <label class="form-checkbox-label">
                     <input type="checkbox" name="cursiva" value="1"
-                           {{ old('cursiva', $task->cursiva ?? false) ? 'checked' : '' }}
-                           style="accent-color:var(--accent-gold); width:14px; height:14px;">
+                           {{ old('cursiva', $task->cursiva ?? false) ? 'checked' : '' }}>
                     <em style="color:var(--star-white);">Cursiva</em>
                 </label>
             </div>
         </div>
 
-        {{-- Acciones --}}
-        <div style="margin-top:28px; display:flex; gap:10px;">
+        <div class="form-actions">
             <button type="submit" class="btn-primary">
                 {{ isset($task) ? 'Guardar cambios' : 'Crear tarea' }}
             </button>

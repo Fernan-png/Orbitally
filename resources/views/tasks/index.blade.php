@@ -2,24 +2,7 @@
 @section('title', 'Tareas')
 
 @section('content')
-<style>
-.status-select {
-    background-color: rgba(12, 10, 28, 0.55);
-    border-radius: 3px;
-    cursor: pointer;
-    font-family: 'Jost', sans-serif;
-    outline: none;
-    appearance: none;
-    -webkit-appearance: none;
-    transition: background 0.2s, border-color 0.25s, color 0.25s;
-}
-.status-select:hover { background-color: rgba(25, 20, 50, 0.75); }
-html.light .status-select { background-color: rgba(245, 242, 255, 0.9); }
-html.light .status-select:hover { background-color: rgba(233, 228, 255, 1); }
-.task-toggle { transition: border-color 0.25s, background 0.25s; }
-html.light .task-toggle:not(.is-done) { border-color: rgba(109,40,217,0.22) !important; }
-</style>
-<div class="page-header" style="display:flex; align-items:flex-end; justify-content:space-between; flex-wrap:wrap; gap:16px;">
+<div class="page-header-row">
     <div>
         <div class="page-title">Tareas</div>
         <div class="page-subtitle">Gestiona y organiza todas tus tareas</div>
@@ -171,102 +154,11 @@ html.light .task-toggle:not(.is-done) { border-color: rgba(109,40,217,0.22) !imp
                       data-confirm="¿Eliminar esta tarea? Esta acción no se puede deshacer.">
                     @csrf
                     @method('DELETE')
-                    <button type="submit"
-                            style="padding:5px 12px; font-family:'Jost',sans-serif; font-size:12px;
-                                   color:rgba(255,100,80,0.65); background:rgba(255,100,80,0.05);
-                                   border:1px solid rgba(255,100,80,0.15); border-radius:3px; cursor:pointer;
-                                   transition:all 0.2s;"
-                            onmouseover="this.style.color='#ff6644'; this.style.background='rgba(255,100,80,0.1)';"
-                            onmouseout="this.style.color='rgba(255,100,80,0.65)'; this.style.background='rgba(255,100,80,0.05)';">
-                        Eliminar
-                    </button>
+                    <button type="submit" class="btn-danger">Eliminar</button>
                 </form>
             </div>
         </div>
         @endforeach
     @endif
 </div>
-<script>
-    const STATUS_COLORS = { pendiente: '#a78bfa', en_progreso: '#88aaff', completada: '#4dcfcf' };
-    const STATUS_LABELS = { pendiente: 'Pendiente', en_progreso: 'En progreso', completada: 'Completada' };
-
-    // Actualiza visualmente una fila de tarea sin recargar la página
-    function updateTaskUI(taskId, newStatus) {
-        const color   = STATUS_COLORS[newStatus];
-        const isDone  = newStatus === 'completada';
-        const isLight = document.documentElement.classList.contains('light');
-
-        const row    = document.getElementById('task-row-' + taskId);
-        const dot    = document.getElementById('dot-' + taskId);
-        const label  = document.getElementById('status-label-' + taskId);
-        const title  = row.querySelector('.task-title');
-        const select = row.querySelector('.status-select');
-        const toggle = row.querySelector('.task-toggle');
-
-        // Actualizar select
-        select.value            = newStatus;
-        select.style.color      = color;
-        select.style.borderColor = color + '55';
-
-        // Actualizar indicador de estado
-        dot.style.background = color;
-        dot.style.boxShadow  = '0 0 5px ' + color + '66';
-        label.textContent    = STATUS_LABELS[newStatus];
-
-        // Actualizar fila y título
-        row.style.opacity             = isDone ? '0.5' : '1';
-        title.style.textDecoration    = isDone ? 'line-through' : 'none';
-
-        // Actualizar botón circular
-        toggle.dataset.estado    = newStatus;
-        toggle.innerHTML         = isDone ? '✓' : '';
-        toggle.title             = 'Marcar como ' + (isDone ? 'pendiente' : 'completada');
-        toggle.style.background  = isDone ? 'rgba(77,207,207,0.18)' : 'transparent';
-        toggle.style.borderColor = isDone ? '#4dcfcf' : (isLight ? 'rgba(109,40,217,0.22)' : 'rgba(255,255,255,0.18)');
-        toggle.classList.toggle('is-done', isDone);
-
-        // Flash de fondo
-        row.style.background = color + '12';
-        setTimeout(function() { row.style.background = ''; }, 420);
-    }
-
-    // Envía el cambio de estado al servidor
-    async function patchStatus(taskId, newStatus) {
-        try {
-            const response = await fetch('/tasks/' + taskId + '/status', {
-                method: 'PATCH',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': CSRF
-                },
-                body: JSON.stringify({ estado: newStatus })
-            });
-
-            if (!response.ok) throw new Error('Error al actualizar');
-
-            const toastType = newStatus === 'completada' ? 'success' : 'info';
-            showToast('Marcado como ' + STATUS_LABELS[newStatus], toastType);
-        } catch (error) {
-            location.reload();
-        }
-    }
-
-    // Cambiar estado desde el selector
-    document.querySelectorAll('.status-select').forEach(function(select) {
-        select.addEventListener('change', function() {
-            updateTaskUI(this.dataset.taskId, this.value);
-            patchStatus(this.dataset.taskId, this.value);
-        });
-    });
-
-    // Cambiar estado desde el botón circular
-    document.querySelectorAll('.task-toggle').forEach(function(button) {
-        button.addEventListener('click', function() {
-            const taskId    = this.dataset.taskId;
-            const newStatus = this.dataset.estado === 'completada' ? 'pendiente' : 'completada';
-            updateTaskUI(taskId, newStatus);
-            patchStatus(taskId, newStatus);
-        });
-    });
-</script>
 @endsection

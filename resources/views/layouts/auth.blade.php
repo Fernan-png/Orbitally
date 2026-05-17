@@ -182,6 +182,19 @@
             line-height: 1.5;
         }
 
+        .field-error {
+            display: block;
+            font-size: 12px;
+            color: #ff8866;
+            margin-top: 5px;
+            letter-spacing: 0.02em;
+        }
+
+        .input-error {
+            border-color: rgba(255, 100, 80, 0.5) !important;
+            background: rgba(255, 100, 80, 0.04) !important;
+        }
+
         .back-link {
             position: fixed;
             top: 24px;

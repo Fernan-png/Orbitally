@@ -28,8 +28,8 @@
             --accent-gold: #8b5cf6;
             --accent-teal: #4dcfcf;
             --accent-violet: #8b5cf6;
-            --sun-core: #c4b5fd;
-            --sun-glow: #7c3aed;
+            --sun-core: #ffff00;
+            --sun-glow: #efb810;
         }
 
         body {
