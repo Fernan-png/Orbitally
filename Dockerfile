@@ -13,5 +13,6 @@ WORKDIR /app
 COPY . .
 
 RUN composer install --no-dev --optimize-autoloader
+RUN chmod +x start.sh
 
 EXPOSE 8080
