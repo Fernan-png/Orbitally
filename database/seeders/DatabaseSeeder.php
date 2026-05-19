@@ -34,6 +34,16 @@ class DatabaseSeeder extends Seeder
                 'created_at'     => now(),
                 'updated_at'     => now(),
             ],
+            [
+                'id'            => 3,
+                'nombre'       => 'Admin',
+                'email'          => 'admin@admin',
+                'password'       => Hash::make('admin1234'),
+                'notificaciones' => true,
+                'tema'           => 'oscuro',
+                'created_at'   => now(),
+                'updated_at'   => now(),
+            ]
         ];
         DB::table('users')->insert($usuarios);
 

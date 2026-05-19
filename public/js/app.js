@@ -60,6 +60,7 @@ if (themeForm) {
         }
 
         const newTheme = toLight ? 'claro' : 'oscuro';
+        localStorage.setItem('orbi_tema', newTheme);
         document.cookie = 'orbi_tema=' + newTheme + '; path=/; max-age=' + (365 * 24 * 60 * 60) + '; SameSite=Lax';
 
         fetch(themeForm.action, {
