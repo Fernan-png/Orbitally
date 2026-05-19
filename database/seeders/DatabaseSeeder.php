@@ -44,7 +44,7 @@ class DatabaseSeeder extends Seeder
             ['id' => 1, 'nombre' => 'Laboral',  'es_predefinida' => true, 'prioridad' => 1, 'color_borde' => '#4F9CF9', 'usuario_id' => null],
             ['id' => 2, 'nombre' => 'Estudios', 'es_predefinida' => true, 'prioridad' => 2, 'color_borde' => '#A78BFA', 'usuario_id' => null],
             ['id' => 3, 'nombre' => 'Personal', 'es_predefinida' => true, 'prioridad' => 3, 'color_borde' => '#34D399', 'usuario_id' => null],
-            ['id' => 4, 'nombre' => 'Ocio',     'es_predefinida' => true, 'prioridad' => 4, 'color_borde' => '#FBBF24', 'usuario_id' => null],
+            ['id' => 4, 'nombre' => 'Pomodoro',  'es_predefinida' => true, 'prioridad' => 4, 'color_borde' => '#F97316', 'usuario_id' => null],
         ];
 
         // CATEGORÍAS PERSONALIZADAS (creadas por los usuarios)
@@ -204,7 +204,7 @@ class DatabaseSeeder extends Seeder
                 'fecha_fin'    => now()->addDays(2),
                 'estado'       => 'pendiente',
                 'prioridad'    => 'baja',
-                'categoria_id' => 4, // Ocio
+                'categoria_id' => 3, // Personal
                 'usuario_id'   => 2,
             ],
         ];

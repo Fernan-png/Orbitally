@@ -36,8 +36,9 @@ class TaskController extends Controller
 
     public function create()
     {
-        $categories = $this->categorias();
-        return view('tasks.form', compact('categories'));
+        $categories    = $this->categorias();
+        $pomodoroCateg = Categoria::whereNull('usuario_id')->where('nombre', 'Pomodoro')->first();
+        return view('tasks.form', compact('categories', 'pomodoroCateg'));
     }
 
     public function store(Request $request)
@@ -56,8 +57,9 @@ class TaskController extends Controller
     public function edit(Tarea $task)
     {
         abort_if($task->usuario_id !== Auth::id(), 403);
-        $categories = $this->categorias();
-        return view('tasks.form', compact('task', 'categories'));
+        $categories    = $this->categorias();
+        $pomodoroCateg = Categoria::whereNull('usuario_id')->where('nombre', 'Pomodoro')->first();
+        return view('tasks.form', compact('task', 'categories', 'pomodoroCateg'));
     }
 
     public function update(Request $request, Tarea $task)
@@ -102,15 +104,17 @@ class TaskController extends Controller
 
     private function taskRules(bool $update = false): array {
         return [
-            'titulo'       => 'required|string|max:150',
-            'descripcion'  => 'nullable|string',
-            'emoji'        => 'nullable|string|max:4',
-            'prioridad'    => 'required|in:baja,media,alta',
-            'estado'       => ($update ? 'required' : 'nullable') . '|in:pendiente,en_progreso,completada',
-            'categoria_id' => 'nullable|exists:categorias,id',
-            'fecha_fin'    => 'nullable|date',
-            'negrita'      => 'nullable|boolean',
-            'cursiva'      => 'nullable|boolean',
+            'titulo'            => 'required|string|max:150',
+            'descripcion'       => 'nullable|string',
+            'emoji'             => 'nullable|string|max:4',
+            'prioridad'         => 'required|in:baja,media,alta',
+            'estado'            => ($update ? 'required' : 'nullable') . '|in:pendiente,en_progreso,completada',
+            'categoria_id'      => 'nullable|exists:categorias,id',
+            'fecha_fin'         => 'nullable|date',
+            'negrita'           => 'nullable|boolean',
+            'cursiva'           => 'nullable|boolean',
+            'pomodoro_estudio'  => 'nullable|integer|min:1|max:120',
+            'pomodoro_descanso' => 'nullable|integer|min:1|max:60',
         ];
     }
 }

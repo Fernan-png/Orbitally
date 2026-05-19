@@ -453,6 +453,27 @@ html.light .form-input option {
     color: #111827;
 }
 
+/* Icono del calendario en inputs tipo date */
+input[type="date"].form-input::-webkit-calendar-picker-indicator {
+    filter: invert(0.7) sepia(1) saturate(1.5) hue-rotate(200deg);
+    cursor: pointer;
+    opacity: 0.85;
+    padding: 2px;
+    border-radius: 3px;
+    transition: opacity 0.2s, filter 0.2s;
+}
+input[type="date"].form-input::-webkit-calendar-picker-indicator:hover {
+    opacity: 1;
+    filter: invert(0.9) sepia(1) saturate(2) hue-rotate(200deg);
+}
+html.light input[type="date"].form-input::-webkit-calendar-picker-indicator {
+    filter: invert(0.3) sepia(1) saturate(2) hue-rotate(230deg);
+    opacity: 0.7;
+}
+html.light input[type="date"].form-input::-webkit-calendar-picker-indicator:hover {
+    opacity: 1;
+}
+
 /* Form layout helpers */
 .form-grid {
     display: grid;
@@ -735,8 +756,9 @@ body.sb-collapsed .sb-toggle-btn i  { transform: rotate(180deg); }
 body.sb-collapsed .sidebar-user     { padding: 12px 0; }
 body.sb-collapsed .user-name,
 body.sb-collapsed .user-email       { display: none !important; }
-body.sb-collapsed .btn-logout       { justify-content: center; width: auto !important; }
-body.sb-collapsed .sidebar-user form { margin-bottom: 4px !important; }
+body.sb-collapsed .btn-logout       { justify-content: center !important; width: 100% !important; padding: 10px 0 !important; gap: 0 !important; }
+body.sb-collapsed .btn-logout > span { gap: 0 !important; }
+body.sb-collapsed .sidebar-user form { display: block; width: 100%; margin-bottom: 4px !important; }
 
 /* ===== Hamburguesa móvil ===== */
 .sb-hamburger {

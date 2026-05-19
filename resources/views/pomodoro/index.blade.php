@@ -315,19 +315,20 @@
                 <div style="font-size:10px; letter-spacing:0.15em; text-transform:uppercase;
                             color:var(--text-dim); margin-bottom:10px;">
                     Tarea asociada
-                    <span style="color:rgba(139,92,246,0.6); font-size:9px; display:block; margin-top:2px; letter-spacing:0.05em; text-transform:none;">
-                        Solo Estudios / Laboral
+                    <span style="color:rgba(249,115,22,0.65); font-size:9px; display:block; margin-top:2px; letter-spacing:0.05em; text-transform:none;">
+                        🍅 Solo tareas Pomodoro
                     </span>
                 </div>
                 <select id="task-select" class="form-input" style="width:190px; font-size:13px; padding:8px 12px;">
                     <option value="">Sin tarea</option>
                     @forelse($tareas as $tarea)
-                        <option value="{{ $tarea->id }}">
-                            {{ $tarea->emoji ? $tarea->emoji . ' ' : '' }}{{ Str::limit($tarea->titulo, 28) }}
-                            ({{ $tarea->categoria->nombre ?? '' }})
+                        <option value="{{ $tarea->id }}"
+                                data-estudio="{{ $tarea->pomodoro_estudio }}"
+                                data-descanso="{{ $tarea->pomodoro_descanso }}">
+                            {{ $tarea->emoji ? $tarea->emoji . ' ' : '' }}{{ Str::limit($tarea->titulo, 32) }}
                         </option>
                     @empty
-                        <option value="" disabled>Sin tareas disponibles</option>
+                        <option value="" disabled>No hay tareas Pomodoro activas</option>
                     @endforelse
                 </select>
             </div>
@@ -427,6 +428,18 @@
     const phaseFlash      = document.getElementById('phase-flash');
     const studyError      = document.getElementById('study-error');
     const breakError      = document.getElementById('break-error');
+
+    // Si la tarea tiene tiempos Pomodoro configurados, cargarlos al seleccionarla
+    taskSelect.addEventListener('change', function () {
+        var opcion = this.options[this.selectedIndex];
+        var estudio = parseInt(opcion.dataset.estudio);
+        var descanso = parseInt(opcion.dataset.descanso);
+
+        if (estudio > 0 && descanso > 0) {
+            studyInput.value = estudio;
+            breakInput.value = descanso;
+        }
+    });
 
     // Estado del temporizador
     let intervalId   = null;
