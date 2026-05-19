@@ -1,5 +1,8 @@
 <!DOCTYPE html>
-<html lang="es" class="{{ Auth::user()->tema === 'claro' ? 'light' : 'dark' }}">
+@php
+    $temaEfectivo = request()->cookie('orbi_tema') ?? Auth::user()->tema ?? 'oscuro';
+@endphp
+<html lang="es" class="{{ $temaEfectivo === 'claro' ? 'light' : 'dark' }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,8 +13,8 @@
     <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('icon/favicon-16x16.png') }}">
     <link rel="apple-touch-icon" href="{{ asset('icon/apple-touch-icon.png') }}">
 
-    <script src="https://cdn.tailwindcss.com"></script>
     <script>tailwind.config = { darkMode: 'class' }</script>
+    <script src="https://cdn.tailwindcss.com"></script>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -24,14 +27,17 @@
 
 <!-- Para aplicar el tema del usuario antes de que el navegador renderice nada -->
 <script>
-    const tema = "{{ auth()->user()->tema ?? 'oscuro' }}";
-    if (tema === 'oscuro') {
-        document.documentElement.classList.add('dark');
-        document.documentElement.classList.remove('light');
-    } else {
-        document.documentElement.classList.add('light');
-        document.documentElement.classList.remove('dark');
-    }
+    (function () {
+        var m = document.cookie.match(/orbi_tema=([^;]+)/);
+        var tema = m ? decodeURIComponent(m[1]) : "{{ $temaEfectivo }}";
+        if (tema === 'oscuro') {
+            document.documentElement.classList.add('dark');
+            document.documentElement.classList.remove('light');
+        } else {
+            document.documentElement.classList.add('light');
+            document.documentElement.classList.remove('dark');
+        }
+    })();
 </script>
 <body>
 
