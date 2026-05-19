@@ -1,6 +1,8 @@
 ﻿[build]
 builder = "NIXPACKS"
 
+[build.nixpacksConfig.variables]
+NODE_VERSION = "20"
+
 [build.nixpacksConfig]
 phpVersion = "8.4"
-nodeVersion = "20"
