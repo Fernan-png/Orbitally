@@ -16,4 +16,4 @@ RUN composer install --no-dev --optimize-autoloader
 
 EXPOSE 8080
 
-CMD php artisan migrate --force && php -S 0.0.0.0:$PORT -t public
+CMD ["/bin/bash", "-c", "php artisan migrate --force && php -S 0.0.0.0: -t public"]
