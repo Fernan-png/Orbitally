@@ -20,6 +20,8 @@ class Tarea extends Model
         'prioridad',
         'categoria_id',
         'usuario_id',
+        'pomodoro_estudio',
+        'pomodoro_descanso',
     ];
 
     protected $casts = [

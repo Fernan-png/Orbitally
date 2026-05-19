@@ -18,15 +18,14 @@ class PomodoroController extends Controller
     {
         $user = Auth::user();
 
-        // IDs de las categorías Estudios y Laboral (predefinidas, usuario_id = null)
-        $categoriasPermitidas = Categoria::whereNull('usuario_id')
-            ->whereIn('nombre', ['Estudios', 'Laboral'])
-            ->pluck('id');
+        // Solo tareas con categoría Pomodoro
+        $pomodoroId = Categoria::whereNull('usuario_id')
+            ->where('nombre', 'Pomodoro')
+            ->value('id');
 
-        // Solo tareas activas de esas categorías
         $tareas = $user->tareas()
             ->whereIn('estado', ['pendiente', 'en_progreso'])
-            ->whereIn('categoria_id', $categoriasPermitidas)
+            ->where('categoria_id', $pomodoroId)
             ->with('categoria')
             ->orderBy('prioridad', 'desc')
             ->get();
@@ -68,12 +67,10 @@ class PomodoroController extends Controller
         ]);
 
         if (!empty($data['tarea_id'])) {
-            $tarea = Tarea::with('categoria')->find($data['tarea_id']);
+            $tarea = Tarea::find($data['tarea_id']);
             abort_if($tarea->usuario_id !== Auth::id(), 403);
-            $permitidas = Categoria::whereNull('usuario_id')
-                ->whereIn('nombre', ['Estudios', 'Laboral'])
-                ->pluck('id');
-            abort_if(!$permitidas->contains($tarea->categoria_id), 422);
+            $pomodoroId = Categoria::whereNull('usuario_id')->where('nombre', 'Pomodoro')->value('id');
+            abort_if($tarea->categoria_id !== $pomodoroId, 422);
         }
 
         Pomodoro::create([
@@ -101,15 +98,12 @@ class PomodoroController extends Controller
             'tarea_id'          => 'nullable|exists:tareas,id',
         ]);
 
-        // Verificar que la tarea pertenece al usuario y es de categoría permitida
+        // Verificar que la tarea pertenece al usuario y tiene categoría Pomodoro
         if (!empty($data['tarea_id'])) {
-            $tarea = Tarea::with('categoria')->find($data['tarea_id']);
+            $tarea = Tarea::find($data['tarea_id']);
             abort_if($tarea->usuario_id !== Auth::id(), 403);
-
-            $permitidas = Categoria::whereNull('usuario_id')
-                ->whereIn('nombre', ['Estudios', 'Laboral'])
-                ->pluck('id');
-            abort_if(!$permitidas->contains($tarea->categoria_id), 422);
+            $pomodoroId = Categoria::whereNull('usuario_id')->where('nombre', 'Pomodoro')->value('id');
+            abort_if($tarea->categoria_id !== $pomodoroId, 422);
         }
 
         $sesion = Pomodoro::create([

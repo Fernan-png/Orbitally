@@ -21,24 +21,32 @@ class CategoryController extends Controller
     {
         $data = $request->validate([
             'nombre'      => 'required|string|max:50',
-            'prioridad' => 'nullable|integer|min:1',
+            'prioridad'   => 'nullable|integer|min:1',
             'color_borde' => 'nullable|string|max:7',
         ]);
 
-        Auth::user()->categorias()->create([
-            'nombre'      => $data['nombre'],
-            'color_borde' => $data['color_borde'] ?? '#4dcfcf',
-            'prioridad'   => $request->integer('prioridad', 1),
+        $categoria = Auth::user()->categorias()->create([
+            'nombre'         => $data['nombre'],
+            'color_borde'    => $data['color_borde'] ?? '#4dcfcf',
+            'prioridad'      => $request->integer('prioridad', 1),
             'es_predefinida' => false,
         ]);
+
+        if ($request->expectsJson()) {
+            return response()->json([
+                'id'          => $categoria->id,
+                'nombre'      => $categoria->nombre,
+                'color_borde' => $categoria->color_borde,
+            ]);
+        }
 
         return back()->with('success', 'Categoría creada correctamente.');
     }
 
-    public function destroy(Categoria $categoria)
+    public function destroy(Categoria $category)
     {
-        abort_if($categoria->usuario_id !== Auth::id(), 403);
-        $categoria->delete();
+        abort_if($category->usuario_id !== Auth::id(), 403);
+        $category->delete();
         return back()->with('success', 'Categoría eliminada.');
     }
 }

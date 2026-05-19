@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(powershell -Command \"Get-ChildItem -Path 'app\\\\Http\\\\Controllers' -Filter '*.php' | Select-Object -ExpandProperty Name\")",
+      "Bash(powershell -Command \"Get-ChildItem -Path 'database\\\\migrations' -Filter '*.php' | Select-Object -ExpandProperty Name\")",
+      "Bash(php -l resources/views/tasks/form.blade.php)",
+      "Bash(php artisan *)"
+    ]
+  }
+}
