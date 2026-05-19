@@ -21,6 +21,18 @@
 
     @stack('styles')
 </head>
+
+<!-- Para aplicar el tema del usuario antes de que el navegador renderice nada -->
+<script>
+    const tema = "{{ auth()->user()->tema ?? 'oscuro' }}";
+    if (tema === 'oscuro') {
+        document.documentElement.classList.add('dark');
+        document.documentElement.classList.remove('light');
+    } else {
+        document.documentElement.classList.add('light');
+        document.documentElement.classList.remove('dark');
+    }
+</script>
 <body>
 
     <aside class="sidebar">

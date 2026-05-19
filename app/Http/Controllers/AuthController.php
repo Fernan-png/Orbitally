@@ -29,7 +29,8 @@ class AuthController extends Controller
 
         if (Auth::attempt($credentials, $request->boolean('remember'))) {
             $request->session()->regenerate();
-            return redirect()->intended(route('dashboard'));
+            return redirect()->intended(route('dashboard'))
+                ->cookie('orbi_tema', Auth::user()->tema, 60 * 24 * 365);
         }
 
         return back()->withErrors([
@@ -71,7 +72,9 @@ class AuthController extends Controller
         Auth::login($user);
         $request->session()->regenerate();
 
-        return redirect()->route('dashboard')->with('success', '¡Bienvenido a Orbitally, ' . $user->nombre . '!');
+        return redirect()->route('dashboard')
+            ->with('success', '¡Bienvenido a Orbitally, ' . $user->nombre . '!')
+            ->cookie('orbi_tema', 'oscuro', 60 * 24 * 365);
     }
 
     // --- LOGOUT ---------------------------------------------------------

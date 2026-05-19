@@ -36,7 +36,7 @@ Route::middleware('auth')->group(function () {
         $user = Auth::user();
         $user->tema = $user->tema === 'oscuro' ? 'claro' : 'oscuro';
         $user->save();
-        return back();
+        return back()->cookie('orbi_tema', $user->tema, 60 * 24 * 365);
     })->name('tema.toggle');
 
     // Tasks (resourceful)

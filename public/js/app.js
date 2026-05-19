@@ -59,6 +59,9 @@ if (themeForm) {
             btn.title = 'Cambiar a modo claro';
         }
 
+        const newTheme = toLight ? 'claro' : 'oscuro';
+        document.cookie = 'orbi_tema=' + newTheme + '; path=/; max-age=' + (365 * 24 * 60 * 60) + '; SameSite=Lax';
+
         fetch(themeForm.action, {
             method: 'POST',
             headers: { 'X-CSRF-TOKEN': CSRF },

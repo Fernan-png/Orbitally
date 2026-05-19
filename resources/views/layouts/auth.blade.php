@@ -1,5 +1,6 @@
+@php $cookieTema = request()->cookie('orbi_tema', 'oscuro'); @endphp
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" class="{{ $cookieTema === 'claro' ? 'light' : 'dark' }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,13 +11,26 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
     <style>
-        :root {
+        :root, html.dark {
             --space-deep:    #03060f;
             --accent-gold:   #8b5cf6;
             --star-white:    #e8edf8;
             --text-dim:      rgba(180, 200, 240, 0.55);
             --border-subtle: rgba(255, 255, 255, 0.07);
             --panel-bg:      rgba(5, 10, 22, 0.92);
+            --card-border:   rgba(139, 92, 246, 0.18);
+            --card-shadow:   0 32px 64px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.03) inset;
+        }
+
+        html.light {
+            --space-deep:    #f5f3ff;
+            --accent-gold:   #6d28d9;
+            --star-white:    #150f3a;
+            --text-dim:      rgba(55, 20, 120, 0.78);
+            --border-subtle: rgba(109, 40, 217, 0.12);
+            --panel-bg:      rgba(255, 255, 255, 0.96);
+            --card-border:   rgba(109, 40, 217, 0.22);
+            --card-shadow:   0 32px 64px rgba(109,40,217,0.12), 0 0 0 1px rgba(109,40,217,0.04) inset;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -29,6 +43,12 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        html.light body {
+            background: linear-gradient(160deg, #f5f3ff 0%, #fdf8ff 50%, #ede9fe 100%);
+            background-attachment: fixed;
         }
 
         /* Starfield */
@@ -51,6 +71,8 @@
             pointer-events: none;
         }
 
+        html.light body::before { opacity: 0; }
+
         /* Subtle glow under card */
         body::after {
             content: '';
@@ -63,16 +85,20 @@
             z-index: 0;
         }
 
+        html.light body::after {
+            background: radial-gradient(ellipse at center bottom, rgba(109,40,217,0.09) 0%, transparent 70%);
+        }
+
         .auth-card {
             position: relative; z-index: 1;
             background: var(--panel-bg);
-            border: 1px solid rgba(139, 92, 246, 0.18);
+            border: 1px solid var(--card-border);
             border-radius: 4px;
             width: 100%;
             max-width: 400px;
             padding: 40px;
             backdrop-filter: blur(16px);
-            box-shadow: 0 32px 64px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.03) inset;
+            box-shadow: var(--card-shadow);
         }
 
         .auth-logo {
@@ -119,7 +145,7 @@
         .form-input {
             width: 100%;
             background: rgba(255, 255, 255, 0.04);
-            border: 1px solid rgba(255, 255, 255, 0.09);
+            border: 1px solid var(--border-subtle);
             border-radius: 2px;
             padding: 11px 14px;
             font-family: 'Jost', sans-serif;
@@ -128,10 +154,17 @@
             outline: none;
             transition: border-color 0.2s, background 0.2s;
         }
-        .form-input::placeholder { color: rgba(180, 200, 240, 0.22); }
+        html.light .form-input {
+            background: rgba(109, 40, 217, 0.04);
+        }
+        .form-input::placeholder { color: var(--text-dim); opacity: 0.5; }
         .form-input:focus {
             border-color: rgba(139, 92, 246, 0.5);
             background: rgba(255, 255, 255, 0.06);
+        }
+        html.light .form-input:focus {
+            border-color: rgba(109, 40, 217, 0.5);
+            background: rgba(109, 40, 217, 0.07);
         }
 
         .btn-submit {
@@ -200,7 +233,7 @@
             top: 24px;
             left: 24px;
             font-size: 12px;
-            color: rgba(180, 200, 240, 0.45);
+            color: var(--text-dim);
             text-decoration: none;
             display: flex;
             align-items: center;
