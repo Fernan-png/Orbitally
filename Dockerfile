@@ -15,5 +15,3 @@ COPY . .
 RUN composer install --no-dev --optimize-autoloader
 
 EXPOSE 8080
-
-CMD ["/bin/bash", "-c", "php artisan migrate --force && php -S 0.0.0.0: -t public"]
