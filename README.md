@@ -76,7 +76,7 @@ Ejecutar migraciones:
 php artisan migrate
 ```
 
-Cargar datos de prueba (usuario: `demo@orbitally.app` / contraseña: `password`):
+Cargar datos de prueba (usuario: `fernando@orbitally.test / diego@orbitally.test` / contraseña: `password123`):
 ```bash
 php artisan db:seed
 ```
