@@ -91,8 +91,7 @@ php artisan serve
 
 ## 🔭 Próximas funcionalidades
 
-- Temporizador Pomodoro
-- Asistente IA
-- Módulo de escritura
-- Etiquetas y filtrado avanzado
+- Guardado de conversaciones de IA
+- Posibilidad de organizarse entre sí con otros usuarios de la app
+- Módulo de escritura (para dispositivos de sobremesa)
 - Notificaciones por email
